@@ -4,7 +4,7 @@ public class Edge {
 
     private final Node destination;
     private final String name;
-    private final double weight;
+    private double weight;
 
     public Edge(Node destination, String name, double weight) {
         this.destination = Objects.requireNonNull(destination);
@@ -28,7 +28,13 @@ public class Edge {
         return weight;
     }
 
-    //Lägg till setWeight metod här!
+    public void setWeight(int weight) throws IllegalArgumentException {
+        if(weight < 0){
+            throw new IllegalArgumentException();
+        }else {
+            this.weight = weight;
+        }
+    }
 
     public boolean equals(Object other) {
         if (other instanceof Edge edge) {
