@@ -1,0 +1,118 @@
+import java.util.*;
+
+/**
+ * Oriktad graf
+ */
+public class ListGraph {
+
+    private final Map<Node, Set<Edge>> nodes = new HashMap<>();
+
+    public void add(Node node) {
+        nodes.putIfAbsent(node, new HashSet<>());
+    }
+
+    public void connect(Node a, Node b, String name, double weight) {
+        add(a);
+        add(b);
+
+        Set<Edge> aEdges = nodes.get(a);
+        Set<Edge> bEdges = nodes.get(b);
+
+        aEdges.add(new Edge(b, name, weight));
+        bEdges.add(new Edge(a, name, weight));
+
+    }
+
+    public boolean pathExists(Node a, Node b) {
+        Set<Node> visited = new HashSet<>();
+        depthFirstVisitAll(a, visited);
+        return visited.contains(b);
+    }
+
+    public List<Edge> getAnyPath(Node from, Node to) {
+        Map<Node, Node> connection = new HashMap<>();
+        depthFirstConnection(from, null, connection);
+        if (!connection.containsKey(to)) {
+            return Collections.emptyList();
+        }
+        return gatherPath(from, to, connection);
+    }
+
+    public List<Edge> getShortestPath(Node from, Node to) {
+        Map<Node, Node> connections = new HashMap<>();
+        connections.put(from, null);
+
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(from);
+        while (!queue.isEmpty()) {
+            Node node = queue.pollFirst();
+            for (Edge edge : nodes.get(node)) {
+                Node destination = edge.getDestination();
+                if (!connections.containsKey(destination)) {
+                    connections.put(destination, node);
+                    queue.add(destination);
+                }
+            }
+        }
+
+        if (!connections.containsKey(to)) {
+            throw new IllegalStateException("no connection");
+        }
+
+        return gatherPath(from, to, connections);
+
+    }
+
+    private List<Edge> gatherPath(Node from, Node to, Map<Node, Node> connection) {
+        LinkedList<Edge> path = new LinkedList<>();
+        Node current = to;
+        while (!current.equals(from)) {
+            Node next = connection.get(current);
+            Edge edge = getEdgeBetween(next, current);
+            path.addFirst(edge);
+            current = next;
+        }
+        return Collections.unmodifiableList(path);
+    }
+
+    private Edge getEdgeBetween(Node next, Node current) {
+        for (Edge edge : nodes.get(next)) {
+            if (edge.getDestination().equals(current)) {
+                return edge;
+            }
+        }
+
+        return null;
+    }
+
+    private void depthFirstConnection(Node to, Node from, Map<Node, Node> connection) {
+        connection.put(to, from);
+        for (Edge edge : nodes.get(to)) {
+            if (!connection.containsKey(edge.getDestination())) {
+                depthFirstConnection(edge.getDestination(), to, connection);
+            }
+        }
+
+    }
+
+    private void depthFirstVisitAll(Node current, Set<Node> visited) {
+        visited.add(current);
+        for (Edge edge : nodes.get(current)) {
+            if (!visited.contains(edge.getDestination())) {
+                depthFirstVisitAll(edge.getDestination(), visited);
+            }
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Node node : nodes.keySet()) {
+            sb.append(node).append(": ").append(nodes.get(node)).append("\n");
+        }
+        return sb.toString();
+    }
+
+
+}
