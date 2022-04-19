@@ -4,6 +4,10 @@ public class TestKörning {
         Edge edge = new Edge(node, "E4", 100);
         edge.setWeight(50);
         System.out.println(edge);
+
+
+
+
     }
 
 }

@@ -30,7 +30,7 @@ public class ListGraph {
 
     //Lägg till getNodes metod här!
     public Set<Edge> getNodes(Set<Edge> nodes) {
-        Set<Edge> nodeCopy = new HashSet<Edge>();
+        Set<Edge> nodeCopy = new HashSet<>();
         for (Edge edge : nodes) {
             nodeCopy.add(edge);
         }
@@ -38,6 +38,15 @@ public class ListGraph {
     }
 
     //Lägg till getEdgesFrom metod Här!
+    public Set<Edge> getEdgesFrom(Node node){
+        if(!nodes.containsKey(node)){
+            throw new NoSuchElementException();
+        }else {
+            Set<Edge> tempSet = new HashSet<>();
+            tempSet.addAll(nodes.get(node));
+            return tempSet;
+        }
+    }
 
     public boolean pathExists(Node a, Node b) {
         Set<Node> visited = new HashSet<>();
