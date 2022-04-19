@@ -101,8 +101,11 @@ public class ListGraph {
         return Collections.unmodifiableList(path);
     }
 
-    //Lägg till exception (felkontroll)
+    //Lägg till exception (felkontroll)(Påbörjat men inte testat!)
     private Edge getEdgeBetween(Node next, Node current) {
+        if(!nodes.containsKey(next) || !nodes.containsKey(current)){
+            throw new NoSuchElementException();
+        }
         for (Edge edge : nodes.get(next)) {
             if (edge.getDestination().equals(current)) {
                 return edge;
