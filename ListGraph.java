@@ -37,7 +37,7 @@ public class ListGraph {
         return nodeCopy;
     }
 
-    //Lägg till getEdgesFrom metod Här!
+    //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
     public Set<Edge> getEdgesFrom(Node node){
         if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
@@ -101,7 +101,7 @@ public class ListGraph {
         return Collections.unmodifiableList(path);
     }
 
-    //Lägg till exception (felkontroll)(Påbörjat men inte testat!)
+    //Lägg till exception (felkontroll)(verkar fungera som den ska)
     private Edge getEdgeBetween(Node next, Node current) {
         if(!nodes.containsKey(next) || !nodes.containsKey(current)){
             throw new NoSuchElementException();
@@ -111,7 +111,6 @@ public class ListGraph {
                 return edge;
             }
         }
-
         return null;
     }
 
