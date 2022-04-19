@@ -5,7 +5,8 @@ import java.util.*;
  */
 public class ListGraph {
 
-    private final Map<Node, Set<Edge>> nodes = new HashMap<>();
+    //Static för att testa metoden getNodes()
+    private static final Map<Node, Set<Edge>> nodes = new HashMap<>();
 
     public void add(Node node) {
         nodes.putIfAbsent(node, new HashSet<>());
@@ -29,11 +30,13 @@ public class ListGraph {
     //Lägg till setConnectionWeight metod här!
 
     //Lägg till getNodes metod här!
-    public Set<Edge> getNodes(Set<Edge> nodes) {
-        Set<Edge> nodeCopy = new HashSet<>();
-        for (Edge edge : nodes) {
-            nodeCopy.add(edge);
+    //Static för att testa metoden!
+    public static Map<Node, Set<Edge>> getNodes(Map<Node, Set<Edge>> nodes) {
+        Map<Node, Set<Edge>> nodeCopy = new HashMap<>();
+        for (Node n : nodes.keySet()){
+            nodeCopy.put(n, nodes.get(n));
         }
+        System.out.println("Kopia: " + nodeCopy);
         return nodeCopy;
     }
 
