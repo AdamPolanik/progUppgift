@@ -29,6 +29,13 @@ public class ListGraph {
     //Lägg till setConnectionWeight metod här!
 
     //Lägg till getNodes metod här!
+    public Set<Edge> getNodes(Set<Edge> nodes) {
+        Set<Edge> nodeCopy = new HashSet<Edge>();
+        for (Edge edge : nodes) {
+            nodeCopy.add(edge);
+        }
+        return nodeCopy;
+    }
 
     //Lägg till getEdgesFrom metod Här!
 
