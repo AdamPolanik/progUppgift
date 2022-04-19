@@ -28,6 +28,8 @@ public class Edge {
         return weight;
     }
 
+    //Lägg till setWeight metod här!
+
     public boolean equals(Object other) {
         if (other instanceof Edge edge) {
             return Objects.equals(name, edge.name) &&

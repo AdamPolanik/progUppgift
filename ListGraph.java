@@ -11,6 +11,7 @@ public class ListGraph {
         nodes.putIfAbsent(node, new HashSet<>());
     }
 
+    //Lägg till funktionalitet i denna (Exceptions och felkontroller)
     public void connect(Node a, Node b, String name, double weight) {
         add(a);
         add(b);
@@ -23,11 +24,20 @@ public class ListGraph {
 
     }
 
+    //Lägg till en disconnect metod här!
+
+    //Lägg till setConnectionWeight metod här!
+
+    //Lägg till getNodes metod här!
+
+    //Lägg till getEdgesFrom metod Här!
+
     public boolean pathExists(Node a, Node b) {
         Set<Node> visited = new HashSet<>();
         depthFirstVisitAll(a, visited);
         return visited.contains(b);
     }
+
 
     public List<Edge> getAnyPath(Node from, Node to) {
         Map<Node, Node> connection = new HashMap<>();
@@ -75,6 +85,7 @@ public class ListGraph {
         return Collections.unmodifiableList(path);
     }
 
+    //Lägg till exception (felkontroll)
     private Edge getEdgeBetween(Node next, Node current) {
         for (Edge edge : nodes.get(next)) {
             if (edge.getDestination().equals(current)) {
