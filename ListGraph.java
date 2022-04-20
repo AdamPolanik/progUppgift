@@ -12,6 +12,17 @@ public class ListGraph {
         nodes.putIfAbsent(node, new HashSet<>());
     }
 
+    //Lägg till remove metod här!
+    //Inte testat!
+    public void remove(Node node) throws NoSuchElementException {
+        if (!nodes.containsKey(node)){
+            throw new NoSuchElementException("Non existing node!");
+        } else {
+            nodes.remove(node).remove(getEdgesFrom(node).remove(getEdgeBetween(node, node))); //Osäker på om detta funkar
+        }
+    }
+
+
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
     public void connect(Node a, Node b, String name, double weight) {
         add(a);
@@ -26,17 +37,28 @@ public class ListGraph {
     }
 
     //Lägg till en disconnect metod här!
+    //Inte testad!
+    public void disconnect(Node a, Node b) throws NoSuchElementException, IllegalStateException{
+        if (!nodes.containsKey(a) || !nodes.containsKey(b)){
+            throw new NoSuchElementException("Non existing node!");
+        } else if (nodes.containsKey(a) && nodes.containsKey(b) && getEdgeBetween(a, b) == null){
+            throw new IllegalStateException("Non existing edge between given nodes!");
+        } else {
+            nodes.remove(getEdgeBetween(a, b));
+        }
+    }
+
 
     //Lägg till setConnectionWeight metod här!
 
     //Lägg till getNodes metod här!
-    //Static för att testa metoden!
-    public static Map<Node, Set<Edge>> getNodes(Map<Node, Set<Edge>> nodes) {
+    //Gör static för att testa metoden!
+    public Map<Node, Set<Edge>> getNodes(Map<Node, Set<Edge>> nodes) {
         Map<Node, Set<Edge>> nodeCopy = new HashMap<>();
         for (Node n : nodes.keySet()){
             nodeCopy.put(n, nodes.get(n));
         }
-        System.out.println("Kopia: " + nodeCopy);
+        // System.out.println("Kopia: " + nodeCopy); //Test sout
         return nodeCopy;
     }
 
