@@ -5,13 +5,13 @@ public class Edge<T> {
 
     private final Object destination;
     private final String name;
-    private double weight;
+    private int weight;
 
-    public Edge(Object destination, String name, double weight) {
+    public Edge(Object destination, String name, int weight) {
         this.destination = Objects.requireNonNull(destination);
         this.name = Objects.requireNonNull(name);
 
-        if (Double.isNaN(weight)) {
+        if (weight < 0) {
             throw new IllegalArgumentException();
         }
         this.weight = weight;

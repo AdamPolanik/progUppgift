@@ -14,6 +14,7 @@ public class ListGraph<T> implements Graph,Serializable{
         nodes.putIfAbsent(node, new HashSet<>());
     }
 
+
     //Lägg till remove metod här!
     //Inte testat!
     public void remove(Object node) throws NoSuchElementException {
@@ -27,7 +28,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
 
-    public void connect(Object a, Object b, String name, double weight) {
+    public void connect(Object a, Object b, String name, int weight) {
         add(a);
         add(b);
 
@@ -53,9 +54,12 @@ public class ListGraph<T> implements Graph,Serializable{
 
 
     //Lägg till setConnectionWeight metod här!
+    @Override
+    public void setConnectionWeight(Object node1, Object node2, int weight) {
+
+    }
 
     //Lägg till getNodes metod här!
-
     //Gör static för att testa metoden!
     public Map<Object, Set<Edge>> getNodes(Map<Object, Set<Edge>> nodes) {
         Map<Object, Set<Edge>> nodeCopy = new HashMap<>();
