@@ -7,16 +7,16 @@ import java.util.*;
 public class ListGraph<T> implements Graph,Serializable{
 
     //Static för att testa metoden getNodes()
-    private static final Map<Node, Set<Edge>> nodes = new HashMap<>();
+    private static final Map<Object, Set<Edge>> nodes = new HashMap<>();
 
 
-    public void add(Node node) {
+    public void add(Object node) {
         nodes.putIfAbsent(node, new HashSet<>());
     }
 
     //Lägg till remove metod här!
     //Inte testat!
-    public void remove(Node node) throws NoSuchElementException {
+    public void remove(Object node) throws NoSuchElementException {
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
         } else {
@@ -27,7 +27,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
 
-    public void connect(Node a, Node b, String name, double weight) {
+    public void connect(Object a, Object b, String name, double weight) {
         add(a);
         add(b);
 
@@ -41,7 +41,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till en disconnect metod här!
     //Inte testad!
-    public void disconnect(Node a, Node b) throws NoSuchElementException, IllegalStateException{
+    public void disconnect(Object a, Object b) throws NoSuchElementException, IllegalStateException{
         if (!nodes.containsKey(a) || !nodes.containsKey(b)){
             throw new NoSuchElementException("Non existing node!");
         } else if (nodes.containsKey(a) && nodes.containsKey(b) && getEdgeBetween(a, b) == null){
@@ -57,9 +57,9 @@ public class ListGraph<T> implements Graph,Serializable{
     //Lägg till getNodes metod här!
 
     //Gör static för att testa metoden!
-    public Map<Node, Set<Edge>> getNodes(Map<Node, Set<Edge>> nodes) {
-        Map<Node, Set<Edge>> nodeCopy = new HashMap<>();
-        for (Node n : nodes.keySet()){
+    public Map<Object, Set<Edge>> getNodes(Map<Object, Set<Edge>> nodes) {
+        Map<Object, Set<Edge>> nodeCopy = new HashMap<>();
+        for (Object n : nodes.keySet()){
             nodeCopy.put(n, nodes.get(n));
         }
         // System.out.println("Kopia: " + nodeCopy); //Test sout
@@ -67,7 +67,7 @@ public class ListGraph<T> implements Graph,Serializable{
     }
 
     //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
-    public Set<Edge> getEdgesFrom(Node node){
+    public Set<Edge> getEdgesFrom(Object node){
         if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
         }else {
@@ -77,15 +77,15 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-    public boolean pathExists(Node a, Node b) {
-        Set<Node> visited = new HashSet<>();
+    public boolean pathExists(Object a, Object b) {
+        Set<Object> visited = new HashSet<>();
         depthFirstVisitAll(a, visited);
         return visited.contains(b);
     }
 
     @Override
     public List<Edge> getPath(Object from, Object to) {
-        Map<Node, Node> connection = new HashMap<>();
+        Map<Object, Object> connection = new HashMap<>();
         depthFirstConnection(from, null, connection);
         if (!connection.containsKey(to)) {
             return Collections.emptyList();
@@ -93,16 +93,16 @@ public class ListGraph<T> implements Graph,Serializable{
         return gatherPath(from, to, connection);
     }
 
-    public List<Edge> getShortestPath(Node from, Node to) {
-        Map<Node, Node> connections = new HashMap<>();
+    public List<Edge> getShortestPath(Object from, Object to) {
+        Map<Object, Object> connections = new HashMap<>();
         connections.put(from, null);
 
-        LinkedList<Node> queue = new LinkedList<>();
+        LinkedList<Object> queue = new LinkedList<>();
         queue.add(from);
         while (!queue.isEmpty()) {
-            Node node = queue.pollFirst();
+            Object node = queue.pollFirst();
             for (Edge edge : nodes.get(node)) {
-                Node destination = edge.getDestination();
+                Object destination = edge.getDestination();
                 if (!connections.containsKey(destination)) {
                     connections.put(destination, node);
                     queue.add(destination);
@@ -118,11 +118,11 @@ public class ListGraph<T> implements Graph,Serializable{
 
     }
 
-    private List<Edge> gatherPath(Node from, Node to, Map<Node, Node> connection) {
+    private List<Edge> gatherPath(Object from, Object to, Map<Object, Object> connection) {
         LinkedList<Edge> path = new LinkedList<>();
-        Node current = to;
+        Object current = to;
         while (!current.equals(from)) {
-            Node next = connection.get(current);
+            Object next = connection.get(current);
             Edge edge = getEdgeBetween(next, current);
             path.addFirst(edge);
             current = next;
@@ -131,7 +131,7 @@ public class ListGraph<T> implements Graph,Serializable{
     }
 
     //Lägg till exception (felkontroll)(verkar fungera som den ska)
-    private Edge getEdgeBetween(Node next, Node current) {
+    public Edge getEdgeBetween(Object next, Object current) {
         if(!nodes.containsKey(next) || !nodes.containsKey(current)){
             throw new NoSuchElementException();
         }
@@ -143,7 +143,7 @@ public class ListGraph<T> implements Graph,Serializable{
         return null;
     }
 
-    private void depthFirstConnection(Node to, Node from, Map<Node, Node> connection) {
+    private void depthFirstConnection(Object to, Object from, Map<Object, Object> connection) {
         connection.put(to, from);
         for (Edge edge : nodes.get(to)) {
             if (!connection.containsKey(edge.getDestination())) {
@@ -153,7 +153,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     }
 
-    private void depthFirstVisitAll(Node current, Set<Node> visited) {
+    private void depthFirstVisitAll(Object current, Set<Object> visited) {
         visited.add(current);
         for (Edge edge : nodes.get(current)) {
             if (!visited.contains(edge.getDestination())) {
@@ -166,7 +166,7 @@ public class ListGraph<T> implements Graph,Serializable{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Node node : nodes.keySet()) {
+        for (Object node : nodes.keySet()) {
             sb.append(node).append(": ").append(nodes.get(node)).append("\n");
         }
         return sb.toString();
