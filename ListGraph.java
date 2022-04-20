@@ -1,12 +1,14 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Oriktad graf
  */
-public class ListGraph {
+public class ListGraph<T> implements Graph,Serializable{
 
     //Static för att testa metoden getNodes()
     private static final Map<Node, Set<Edge>> nodes = new HashMap<>();
+
 
     public void add(Node node) {
         nodes.putIfAbsent(node, new HashSet<>());
@@ -24,6 +26,7 @@ public class ListGraph {
 
 
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
+
     public void connect(Node a, Node b, String name, double weight) {
         add(a);
         add(b);
@@ -52,6 +55,7 @@ public class ListGraph {
     //Lägg till setConnectionWeight metod här!
 
     //Lägg till getNodes metod här!
+
     //Gör static för att testa metoden!
     public Map<Node, Set<Edge>> getNodes(Map<Node, Set<Edge>> nodes) {
         Map<Node, Set<Edge>> nodeCopy = new HashMap<>();
@@ -79,8 +83,8 @@ public class ListGraph {
         return visited.contains(b);
     }
 
-
-    public List<Edge> getAnyPath(Node from, Node to) {
+    @Override
+    public List<Edge> getPath(Object from, Object to) {
         Map<Node, Node> connection = new HashMap<>();
         depthFirstConnection(from, null, connection);
         if (!connection.containsKey(to)) {
@@ -167,6 +171,5 @@ public class ListGraph {
         }
         return sb.toString();
     }
-
 
 }

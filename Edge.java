@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Edge {
+public class Edge<T> {
 
     private final Node destination;
     private final String name;
