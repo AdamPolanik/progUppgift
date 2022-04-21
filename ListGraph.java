@@ -28,8 +28,20 @@ public class ListGraph<T> implements Graph,Serializable{
         add(a);
         add(b);
 
+        if(!nodes.containsKey(a) || !nodes.containsKey(a)){
+            throw new NoSuchElementException();
+        }
+        if(weight < 0){
+            throw new IllegalArgumentException();
+        }
+
         Set<Edge> aEdges = nodes.get(a);
         Set<Edge> bEdges = nodes.get(b);
+
+        //Detta är inte klart!
+        if(aEdges.contains(b.toString()) || bEdges.contains(a.toString())){
+            throw new IllegalStateException();
+        }
 
         aEdges.add(new Edge(b, name, weight));
         bEdges.add(new Edge(a, name, weight));
