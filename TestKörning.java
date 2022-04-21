@@ -68,7 +68,7 @@ public class TestKörning {
         System.out.println(nodes);
 
  */
-            graph.getNodes(nodes);
+            graph.getNodes();
     }
 }
 

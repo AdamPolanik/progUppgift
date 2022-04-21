@@ -9,11 +9,9 @@ public class ListGraph<T> implements Graph,Serializable{
     //Static för att testa metoden getNodes()
     private static final Map<Object, Set<Edge>> nodes = new HashMap<>();
 
-
     public void add(Object node) {
         nodes.putIfAbsent(node, new HashSet<>());
     }
-
 
     //Lägg till remove metod här!
     //Inte testat!
@@ -25,9 +23,7 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
-
     public void connect(Object a, Object b, String name, int weight) {
         add(a);
         add(b);
@@ -37,7 +33,6 @@ public class ListGraph<T> implements Graph,Serializable{
 
         aEdges.add(new Edge(b, name, weight));
         bEdges.add(new Edge(a, name, weight));
-
     }
 
     //Lägg till en disconnect metod här!
@@ -52,26 +47,36 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-
     //Lägg till setConnectionWeight metod här!
+    //Klar med metod, ej testad!
     @Override
-    public void setConnectionWeight(Object node1, Object node2, int weight) {
-
+    public void setConnectionWeight(Object node1, Object node2, int weight) throws NoSuchElementException, IllegalArgumentException{
+        if (weight < 0){
+            throw new IllegalArgumentException("Negative weight not allowed!");
+        } else if (!nodes.containsKey(node1) || !nodes.containsKey(node2)){
+            throw new NoSuchElementException("Node missing in graph!");
+        } else if (getEdgesFrom(node1) == null || getEdgesFrom(node2) == null){
+            throw new NoSuchElementException("No edge connection between nodes!");
+        } else {
+            getEdgeBetween(node1, node2).setWeight(weight);
+        }
     }
 
     //Lägg till getNodes metod här!
     //Gör static för att testa metoden!
-    public Map<Object, Set<Edge>> getNodes(Map<Object, Set<Edge>> nodes) {
-        Map<Object, Set<Edge>> nodeCopy = new HashMap<>();
+    public Set<Edge> getNodes() {
+        Set<Edge> nodeCopy = new HashSet<>();
+//        Map<Object, Set<Edge>> nodeCopy = new HashMap<>();
         for (Object n : nodes.keySet()){
-            nodeCopy.put(n, nodes.get(n));
+            nodeCopy.addAll(nodes.get(n));
+//            nodeCopy.put(n, nodes.get(n));
         }
         // System.out.println("Kopia: " + nodeCopy); //Test sout
         return nodeCopy;
     }
 
     //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
-    public Set<Edge> getEdgesFrom(Object node){
+    public Set<Edge> getEdgesFrom(Object node) throws NoSuchElementException{
         if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
         }else {
@@ -117,9 +122,7 @@ public class ListGraph<T> implements Graph,Serializable{
         if (!connections.containsKey(to)) {
             throw new IllegalStateException("no connection");
         }
-
         return gatherPath(from, to, connections);
-
     }
 
     private List<Edge> gatherPath(Object from, Object to, Map<Object, Object> connection) {
@@ -154,7 +157,6 @@ public class ListGraph<T> implements Graph,Serializable{
                 depthFirstConnection(edge.getDestination(), to, connection);
             }
         }
-
     }
 
     private void depthFirstVisitAll(Object current, Set<Object> visited) {
@@ -165,8 +167,6 @@ public class ListGraph<T> implements Graph,Serializable{
             }
         }
     }
-
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -175,5 +175,4 @@ public class ListGraph<T> implements Graph,Serializable{
         }
         return sb.toString();
     }
-
 }
