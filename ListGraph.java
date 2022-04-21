@@ -76,7 +76,7 @@ public class ListGraph<T> implements Graph,Serializable{
     }
 
     //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
-    public Set<Edge> getEdgesFrom(Object node) throws NoSuchElementException{
+    public Collection<Edge> getEdgesFrom(Object node) throws NoSuchElementException{
         if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
         }else {

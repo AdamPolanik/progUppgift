@@ -17,15 +17,15 @@ public class Edge<T> {
         this.weight = weight;
     }
 
-    public Object getDestination() {
-        return destination;
+    public String getDestination() {
+        return destination.toString();
     }
 
     public String getName() {
         return name;
     }
 
-    public double getWeight() {
+    public int getWeight() {
         return weight;
     }
 
