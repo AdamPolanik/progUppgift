@@ -64,14 +64,11 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till getNodes metod här!
     //Gör static för att testa metoden!
-    public Set<Edge> getNodes() {
-        Set<Edge> nodeCopy = new HashSet<>();
-//        Map<Object, Set<Edge>> nodeCopy = new HashMap<>();
+    public Set<Object> getNodes() {
+        HashSet<Object> nodeCopy = new HashSet<>();
         for (Object n : nodes.keySet()){
-            nodeCopy.addAll(nodes.get(n));
-//            nodeCopy.put(n, nodes.get(n));
+            nodeCopy.add(n);
         }
-        // System.out.println("Kopia: " + nodeCopy); //Test sout
         return nodeCopy;
     }
 
