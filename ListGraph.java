@@ -1,3 +1,9 @@
+/**
+ * PROG2 VT2022, Inlämningsuppgift, del 1
+ * Grupp 089
+ * Artin Mohseni armo9784
+ * Adam Polanik adan7490
+*/
 import java.io.Serializable;
 import java.util.*;
 
@@ -19,7 +25,8 @@ public class ListGraph<T> implements Graph,Serializable{
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
         } else {
-            nodes.remove(node).remove(getEdgesFrom(node).remove(getEdgeBetween(node, node))); //Osäker på om detta funkar
+//            nodes.remove(node).remove(getEdgesFrom(node).remove(getEdgeBetween(node, node))); //Osäker på om detta funkar
+            nodes.remove(node).remove(getEdgesFrom(node));
         }
     }
 
@@ -43,7 +50,8 @@ public class ListGraph<T> implements Graph,Serializable{
         } else if (nodes.containsKey(a) && nodes.containsKey(b) && getEdgeBetween(a, b) == null){
             throw new IllegalStateException("Non existing edge between given nodes!");
         } else {
-            nodes.remove(getEdgeBetween(a, b));
+            nodes.get(a).remove(getEdgeBetween(a, b));
+            nodes.get(b).remove(getEdgeBetween(b, a));
         }
     }
 
