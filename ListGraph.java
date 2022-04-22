@@ -27,18 +27,16 @@ public class ListGraph<T> implements Graph,Serializable{
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
         }
-        Set<Edge> edgesToRemove = new HashSet<>();
-        edgesToRemove.add();
-
-//        Collection<Edge> edgesToRemove = getEdgesFrom(node);
-//        for (Map.Entry<Object, Set<Edge>> edge : nodes.entrySet()){
-//            if(nodes.get(edge) == getEdgesFrom(node)){
-//                edgesToRemove.remove(node);
-//            }
-//            System.out.println(edge.getKey() + " = " + "Value: " + edge.getValue());
-//
-//        }
-//        nodes.remove(node);
+        Collection<Edge> edgesToRemove = getEdgesFrom(node);
+        for (Edge edge : edgesToRemove){
+            Object destination = edge.getDestination();
+            Edge between = getEdgeBetween(edge.getDestination(), node);
+            if (between != null){
+                nodes.get(node).remove(edge);
+                nodes.get(destination).remove(between);
+            }
+        }
+        nodes.remove(node);
     }
 
 
