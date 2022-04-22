@@ -21,19 +21,34 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till remove metod här!
     //Inte testat!
+    //Fungerar inte korrekt
     public void remove(Object node) throws NoSuchElementException {
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
-        } else {
-//            nodes.remove(node).remove(getEdgesFrom(node).remove(getEdgeBetween(node, node))); //Osäker på om detta funkar
-            nodes.remove(node).remove(getEdgesFrom(node));
         }
+
+//        Collection<Edge> edgesToRemove = getEdgesFrom(node);
+//        for (Map.Entry<Object, Set<Edge>> edge : nodes.entrySet()){
+//            if(nodes.get(edge) == getEdgesFrom(node)){
+//                edgesToRemove.remove(node);
+//            }
+//            System.out.println(edge.getKey() + " = " + "Value: " + edge.getValue());
+//
+//        }
+//        nodes.remove(node);
     }
 
     //Lägg till funktionalitet i denna (Exceptions och felkontroller)
-    public void connect(Object a, Object b, String name, int weight) {
-        add(a);
-        add(b);
+    public void connect(Object a, Object b, String name, int weight) throws NoSuchElementException, IllegalStateException, IllegalArgumentException{
+        if (weight < 0){
+            throw new IllegalArgumentException("Negative weight not allowed!");
+        }
+        if ((!nodes.containsKey(a) || !nodes.containsKey(b))){
+            throw new NoSuchElementException("Non existing node!");
+        }
+        if (getEdgeBetween(a, b) != null){
+            throw new IllegalStateException("Already existing edge");
+        }
 
         Set<Edge> aEdges = nodes.get(a);
         Set<Edge> bEdges = nodes.get(b);
@@ -47,12 +62,12 @@ public class ListGraph<T> implements Graph,Serializable{
     public void disconnect(Object a, Object b) throws NoSuchElementException, IllegalStateException{
         if (!nodes.containsKey(a) || !nodes.containsKey(b)){
             throw new NoSuchElementException("Non existing node!");
-        } else if (nodes.containsKey(a) && nodes.containsKey(b) && getEdgeBetween(a, b) == null){
-            throw new IllegalStateException("Non existing edge between given nodes!");
-        } else {
-            nodes.get(a).remove(getEdgeBetween(a, b));
-            nodes.get(b).remove(getEdgeBetween(b, a));
         }
+        if (nodes.containsKey(a) && nodes.containsKey(b) && getEdgeBetween(a, b) == null){
+            throw new IllegalStateException("Non existing edge between given nodes!");
+        }
+        nodes.get(a).remove(getEdgeBetween(a, b));
+        nodes.get(b).remove(getEdgeBetween(b, a));
     }
 
     //Lägg till setConnectionWeight metod här!
@@ -61,9 +76,11 @@ public class ListGraph<T> implements Graph,Serializable{
     public void setConnectionWeight(Object node1, Object node2, int weight) throws NoSuchElementException, IllegalArgumentException{
         if (weight < 0){
             throw new IllegalArgumentException("Negative weight not allowed!");
-        } else if (!nodes.containsKey(node1) || !nodes.containsKey(node2)){
+        }
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2)){
             throw new NoSuchElementException("Node missing in graph!");
-        } else if (getEdgesFrom(node1) == null || getEdgesFrom(node2) == null){
+        }
+        if (getEdgesFrom(node1) == null || getEdgesFrom(node2) == null){
             throw new NoSuchElementException("No edge connection between nodes!");
         } else {
             getEdgeBetween(node1, node2).setWeight(weight);
