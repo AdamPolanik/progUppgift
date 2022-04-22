@@ -109,18 +109,23 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
+
     public boolean pathExists(Object a, Object b) {
+        if(!nodes.containsKey(a) || !nodes.containsKey(b)){
+            return false;
+        }
         Set<Object> visited = new HashSet<>();
         depthFirstVisitAll(a, visited);
         return visited.contains(b);
     }
+
 
     @Override
     public List<Edge> getPath(Object from, Object to) {
         Map<Object, Object> connection = new HashMap<>();
         depthFirstConnection(from, null, connection);
         if (!connection.containsKey(to)) {
-            return Collections.emptyList();
+            return null;
         }
         return gatherPath(from, to, connection);
     }
