@@ -42,23 +42,23 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Denna Fungerar!
     @Override
-    public void connect(Object a, Object b, String name, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
-        if(!getNodes().contains(b) || !getNodes().contains(a)){
+    public void connect(Object first, Object second, String name, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
+        if(!getNodes().contains(second) || !getNodes().contains(first)){
             throw new NoSuchElementException();
         }
         if(weight < 0){
             throw new IllegalArgumentException();
         }
 
-        if(getEdgeBetween(a, b) != null){
+        if(getEdgeBetween(first, second) != null){
             throw new IllegalStateException();
         }
 
-        Set<Edge> aEdges = nodes.get(a);
-        Set<Edge> bEdges = nodes.get(b);
+        Set<Edge> firstEdge = nodes.get(first);
+        Set<Edge> secondEdge = nodes.get(second);
 
-        aEdges.add(new Edge(b, name, weight));
-        bEdges.add(new Edge(a, name, weight));
+        firstEdge.add(new Edge(second, name, weight));
+        secondEdge.add(new Edge(first, name, weight));
     }
 
     //Lägg till en disconnect metod här!
