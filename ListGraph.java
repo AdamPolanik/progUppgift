@@ -42,13 +42,17 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Denna Fungerar!
     @Override
-    public void connect(Object a, Object b, String name, int weight) {
+    public void connect(Object a, Object b, String name, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
         if(!getNodes().contains(b) || !getNodes().contains(a)){
             throw new NoSuchElementException();
         }
-        if(weight < 0){ throw new IllegalArgumentException(); }
+        if(weight < 0){
+            throw new IllegalArgumentException();
+        }
 
-        if(getEdgeBetween(a, b) != null){ throw new IllegalStateException(); }
+        if(getEdgeBetween(a, b) != null){
+            throw new IllegalStateException();
+        }
 
         Set<Edge> aEdges = nodes.get(a);
         Set<Edge> bEdges = nodes.get(b);
