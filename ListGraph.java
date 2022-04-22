@@ -13,7 +13,7 @@ import java.util.*;
 public class ListGraph<T> implements Graph,Serializable{
 
     //Static för att testa metoden getNodes()
-    private static final Map<Object, Set<Edge>> nodes = new HashMap<>();
+    private final Map<Object, Set<Edge>> nodes = new HashMap<>();
 
     @Override
     public void add(Object node) {
@@ -23,6 +23,7 @@ public class ListGraph<T> implements Graph,Serializable{
     //Lägg till remove metod här!
     //Inte testat!
     //Fungerar inte korrekt
+    @Override
     public void remove(Object node) throws NoSuchElementException {
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
@@ -43,7 +44,7 @@ public class ListGraph<T> implements Graph,Serializable{
     //Denna Fungerar!
     @Override
     public void connect(Object first, Object second, String name, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
-        if(!getNodes().contains(second) || !getNodes().contains(first)){
+        if(!nodes.containsKey(second) || !nodes.containsKey(first)){
             throw new NoSuchElementException();
         }
         if(weight < 0){
@@ -63,6 +64,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till en disconnect metod här!
     //Inte testad!
+    @Override
     public void disconnect(Object a, Object b) throws NoSuchElementException, IllegalStateException{
         if (!nodes.containsKey(a) || !nodes.containsKey(b)){
             throw new NoSuchElementException("Non existing node!");
@@ -104,6 +106,7 @@ public class ListGraph<T> implements Graph,Serializable{
     }
 
     //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
+    @Override
     public Collection<Edge> getEdgesFrom(Object node) throws NoSuchElementException{
         if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
@@ -114,7 +117,7 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-
+    @Override
     public boolean pathExists(Object a, Object b) {
         if(!nodes.containsKey(a) || !nodes.containsKey(b)){
             return false;
