@@ -9,6 +9,7 @@ public class ListGraph<T> implements Graph,Serializable{
     //Static för att testa metoden getNodes()
     private static final Map<Object, Set<Edge>> nodes = new HashMap<>();
 
+    @Override
     public void add(Object node) {
         nodes.putIfAbsent(node, new HashSet<>());
     }
@@ -23,25 +24,19 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-    //Lägg till funktionalitet i denna (Exceptions och felkontroller)
-    public void connect(Object a, Object b, String name, int weight) {
-        add(a);
-        add(b);
 
-        if(!nodes.containsKey(a) || !nodes.containsKey(a)){
+    //Denna Fungerar!
+    @Override
+    public void connect(Object a, Object b, String name, int weight) {
+        if(!getNodes().contains(b) || !getNodes().contains(a)){
             throw new NoSuchElementException();
         }
-        if(weight < 0){
-            throw new IllegalArgumentException();
-        }
+        if(weight < 0){ throw new IllegalArgumentException(); }
+
+        if(getEdgeBetween(a, b) != null){ throw new IllegalStateException(); }
 
         Set<Edge> aEdges = nodes.get(a);
         Set<Edge> bEdges = nodes.get(b);
-
-        //Detta är inte klart!
-        if(aEdges.contains(b.toString()) || bEdges.contains(a.toString())){
-            throw new IllegalStateException();
-        }
 
         aEdges.add(new Edge(b, name, weight));
         bEdges.add(new Edge(a, name, weight));
@@ -76,6 +71,7 @@ public class ListGraph<T> implements Graph,Serializable{
 
     //Lägg till getNodes metod här!
     //Gör static för att testa metoden!
+    @Override
     public Set<Object> getNodes() {
         HashSet<Object> nodeCopy = new HashSet<>();
         for (Object n : nodes.keySet()){
@@ -147,6 +143,7 @@ public class ListGraph<T> implements Graph,Serializable{
     }
 
     //Lägg till exception (felkontroll)(verkar fungera som den ska)
+    @Override
     public Edge getEdgeBetween(Object next, Object current) {
         if(!nodes.containsKey(next) || !nodes.containsKey(current)){
             throw new NoSuchElementException();
