@@ -27,6 +27,8 @@ public class ListGraph<T> implements Graph,Serializable{
         if (!nodes.containsKey(node)){
             throw new NoSuchElementException("Non existing node!");
         }
+        Set<Edge> edgesToRemove = new HashSet<>();
+        edgesToRemove.add();
 
 //        Collection<Edge> edgesToRemove = getEdgesFrom(node);
 //        for (Map.Entry<Object, Set<Edge>> edge : nodes.entrySet()){
@@ -84,6 +86,7 @@ public class ListGraph<T> implements Graph,Serializable{
             throw new NoSuchElementException("No edge connection between nodes!");
         } else {
             getEdgeBetween(node1, node2).setWeight(weight);
+            getEdgeBetween(node2, node1).setWeight(weight);
         }
     }
 
