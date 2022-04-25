@@ -12,7 +12,6 @@ import java.util.*;
  */
 public class ListGraph<T> implements Graph,Serializable{
 
-    //Static för att testa metoden getNodes()
     private final Map<Object, Set<Edge>> nodes = new HashMap<>();
 
     @Override
@@ -20,9 +19,6 @@ public class ListGraph<T> implements Graph,Serializable{
         nodes.putIfAbsent(node, new HashSet<>());
     }
 
-    //Lägg till remove metod här!
-    //Inte testat!
-    //Fungerar inte korrekt
     @Override
     public void remove(Object node) throws NoSuchElementException {
         if (!nodes.containsKey(node)){
@@ -40,8 +36,6 @@ public class ListGraph<T> implements Graph,Serializable{
         nodes.remove(node);
     }
 
-
-    //Denna Fungerar!
     @Override
     public void connect(Object first, Object second, String name, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
         if(!nodes.containsKey(second) || !nodes.containsKey(first)){
@@ -62,8 +56,6 @@ public class ListGraph<T> implements Graph,Serializable{
         secondEdge.add(new Edge(first, name, weight));
     }
 
-    //Lägg till en disconnect metod här!
-    //Inte testad!
     @Override
     public void disconnect(Object a, Object b) throws NoSuchElementException, IllegalStateException{
         if (!nodes.containsKey(a) || !nodes.containsKey(b)){
@@ -76,8 +68,6 @@ public class ListGraph<T> implements Graph,Serializable{
         nodes.get(b).remove(getEdgeBetween(b, a));
     }
 
-    //Lägg till setConnectionWeight metod här!
-    //Klar med metod, ej testad!
     @Override
     public void setConnectionWeight(Object node1, Object node2, int weight) throws NoSuchElementException, IllegalArgumentException{
         if (weight < 0){
@@ -94,8 +84,6 @@ public class ListGraph<T> implements Graph,Serializable{
         }
     }
 
-    //Lägg till getNodes metod här!
-    //Gör static för att testa metoden!
     @Override
     public Set<Object> getNodes() {
         HashSet<Object> nodeCopy = new HashSet<>();
@@ -105,7 +93,6 @@ public class ListGraph<T> implements Graph,Serializable{
         return nodeCopy;
     }
 
-    //Lägg till getEdgesFrom metod Här! (verkar fungera korrekt)
     @Override
     public Collection<Edge> getEdgesFrom(Object node) throws NoSuchElementException{
         if(!nodes.containsKey(node)){
@@ -126,7 +113,6 @@ public class ListGraph<T> implements Graph,Serializable{
         depthFirstVisitAll(a, visited);
         return visited.contains(b);
     }
-
 
     @Override
     public List<Edge> getPath(Object from, Object to) {
@@ -173,7 +159,6 @@ public class ListGraph<T> implements Graph,Serializable{
         return Collections.unmodifiableList(path);
     }
 
-    //Lägg till exception (felkontroll)(verkar fungera som den ska)
     @Override
     public Edge getEdgeBetween(Object next, Object current) {
         if(!nodes.containsKey(next) || !nodes.containsKey(current)){
@@ -204,6 +189,7 @@ public class ListGraph<T> implements Graph,Serializable{
             }
         }
     }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
