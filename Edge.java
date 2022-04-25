@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Edge<T> {
+public class Edge<T> implements Serializable{
 
     private final Object destination;
     private final String name;
