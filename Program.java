@@ -5,13 +5,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Program extends Application {
+import java.awt.*;
+import java.net.URL;
 
+public class Program extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -77,8 +83,9 @@ public class Program extends Application {
         controls.setAlignment(Pos.TOP_CENTER);
         controls.setPadding(new Insets(5));
         controls.setHgap(10);
-
         controls.getChildren().addAll(btn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
+
+
 
         primaryStage.setScene(new Scene(root, 600, 100));
         primaryStage.show();
