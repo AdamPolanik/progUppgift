@@ -1,9 +1,12 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,8 +18,22 @@ public class Program extends Application {
 
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
+
         Button btn = new Button();
         btn.setText("Find Path");
+
+        Button showConnectionBtn = new Button();
+        showConnectionBtn.setText("Show Connection");
+
+        Button newPlaceBtn = new Button();
+        newPlaceBtn.setText("New Place");
+
+        Button newConnectionBtn = new Button();
+        newConnectionBtn.setText("New Connection");
+
+        Button changeConnectionBtn = new Button();
+        changeConnectionBtn.setText("Change Connection");
+
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
             //Detta kan göras om till en inre klass
@@ -55,8 +72,15 @@ public class Program extends Application {
         fileMenu.getItems().add(exitItem);
 
         //Lägger till knappen, ändrar storlek på Scenen och visar den
-        root.setCenter(btn);
-        primaryStage.setScene(new Scene(root, 300, 70));
+        FlowPane controls = new FlowPane();
+        root.setCenter(controls);
+        controls.setAlignment(Pos.TOP_CENTER);
+        controls.setPadding(new Insets(5));
+        controls.setHgap(10);
+
+        controls.getChildren().addAll(btn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
+
+        primaryStage.setScene(new Scene(root, 600, 100));
         primaryStage.show();
     }
 }
