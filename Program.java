@@ -16,6 +16,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.net.URL;
 
 public class Program extends Application {
@@ -92,7 +93,7 @@ public class Program extends Application {
 
 
 
-        primaryStage.setScene(new Scene(root, 600, 100));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 }
