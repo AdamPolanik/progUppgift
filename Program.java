@@ -9,12 +9,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.net.URL;
 
 public class Program extends Application {
@@ -84,6 +85,10 @@ public class Program extends Application {
         controls.setPadding(new Insets(5));
         controls.setHgap(10);
         controls.getChildren().addAll(btn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
+
+        Image image = new Image("file:europa.gif");
+        ImageView imageView = new ImageView(image);
+        root.setBottom(imageView);
 
 
 
