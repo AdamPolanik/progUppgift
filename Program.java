@@ -21,14 +21,17 @@ import java.net.URL;
 
 public class Program extends Application {
 
+    Image image = new Image("file:europa.gif");
+    ImageView imageView = new ImageView(image);
+
     @Override
     public void start(Stage primaryStage) {
 
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
 
-        Button btn = new Button();
-        btn.setText("Find Path");
+        Button findPathBtn = new Button();
+        findPathBtn.setText("Find Path");
 
         Button showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
@@ -42,7 +45,7 @@ public class Program extends Application {
         Button changeConnectionBtn = new Button();
         changeConnectionBtn.setText("Change Connection");
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        findPathBtn.setOnAction(new EventHandler<ActionEvent>() {
 
             //Detta kan göras om till en inre klass
             @Override
@@ -63,9 +66,16 @@ public class Program extends Application {
         Menu fileMenu = new Menu("File");
         menuBar.getMenus().add(fileMenu);
 
-        //Lägger till val i FileMenu
+        //Lägger till val i FileMenu (fliken New Map)
         MenuItem newMapItem = new MenuItem("New Map");
         fileMenu.getItems().add(newMapItem);
+        newMapItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                root.setBottom(imageView);
+                primaryStage.sizeToScene(); //Ändrar storleken på fönstret så man ser kartan
+            }
+        });
+
 
         MenuItem openItem = new MenuItem("Open");
         fileMenu.getItems().add(openItem);
@@ -85,15 +95,13 @@ public class Program extends Application {
         controls.setAlignment(Pos.TOP_CENTER);
         controls.setPadding(new Insets(5));
         controls.setHgap(10);
-        controls.getChildren().addAll(btn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
-
-        Image image = new Image("file:europa.gif");
-        ImageView imageView = new ImageView(image);
-        root.setBottom(imageView);
-
-
+        controls.setPrefWrapLength(600); //Fixar så alla knappar är på samma rad
+        controls.getChildren().addAll(findPathBtn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
+
+
+
 }
