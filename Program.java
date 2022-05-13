@@ -15,14 +15,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 
 public class Program extends Application {
 
+    ListGraph listGraph = new ListGraph();
+    BorderPane root;
+    Pane bottom = new Pane();
     Image image = new Image("file:europa.gif");
     ImageView imageView = new ImageView(image);
+    private Button newPlaceBtn;
 
     @Override
     public void start(Stage primaryStage) {
@@ -36,7 +43,7 @@ public class Program extends Application {
         Button showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
 
-        Button newPlaceBtn = new Button();
+        newPlaceBtn = new Button();
         newPlaceBtn.setText("New Place");
         newPlaceBtn.setOnAction(new NewPlaceBtnHandler());
 
@@ -57,7 +64,7 @@ public class Program extends Application {
         });
 
         //Skapar en BorderPane och lägger till rutan där "fileMenu" ska ligga
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         VBox vBox = new VBox();
         root.setTop(vBox);
 
@@ -72,7 +79,7 @@ public class Program extends Application {
         fileMenu.getItems().add(newMapItem);
         newMapItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                root.setBottom(imageView);
+                bottom.getChildren().add(imageView);
                 primaryStage.sizeToScene(); //Ändrar storleken på fönstret så man ser kartan
             }
         });
@@ -93,6 +100,7 @@ public class Program extends Application {
         //Lägger till knappen, ändrar storlek på Scenen och visar den
         FlowPane controls = new FlowPane();
         root.setCenter(controls);
+        root.setBottom(bottom);
         controls.setAlignment(Pos.TOP_CENTER);
         controls.setPadding(new Insets(5));
         controls.setHgap(10);
@@ -103,24 +111,39 @@ public class Program extends Application {
         primaryStage.show();
     }
 
+    //Klass för newPlace knappen
     class NewPlaceBtnHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent actionEvent) {
             imageView.setOnMouseClicked(new MapClickHandler());
             imageView.setCursor(Cursor.CROSSHAIR);
+            newPlaceBtn.setDisable(true);
         }
     }
 
+    //Klass för att lägga till noder på kartan
     class MapClickHandler implements EventHandler<MouseEvent>{
         @Override
         public void handle(MouseEvent mouseEvent) {
+            String name;
             double x = mouseEvent.getX();
             double y = mouseEvent.getY();
-            Alert msgBox = new Alert(Alert.AlertType.INFORMATION, "Destination info osv");
-            msgBox.showAndWait();
-            System.out.println("New place at: (X: " + x + " Y: " + y + ")");
+            TextInputDialog inputDialog = new TextInputDialog();
+            inputDialog.setContentText("Name of place: ");
+            inputDialog.setTitle("Name");
+            inputDialog.setHeaderText("");
+            Optional<String> result = inputDialog.showAndWait();
+            name = inputDialog.getEditor().getText();
 
+            if(name != null && result.isPresent()){
+                listGraph.add(name);
+                bottom.getChildren().add(new Place(x,y));
+            }
+
+            System.out.println(listGraph.getNodes().toString());
+            imageView.setOnMouseClicked(null);
             imageView.setCursor(Cursor.DEFAULT);
+            newPlaceBtn.setDisable(false);
         }
     }
 
