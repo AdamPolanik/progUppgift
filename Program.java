@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -11,13 +12,12 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.net.URL;
 
 public class Program extends Application {
 
@@ -38,6 +38,7 @@ public class Program extends Application {
 
         Button newPlaceBtn = new Button();
         newPlaceBtn.setText("New Place");
+        newPlaceBtn.setOnAction(new NewPlaceBtnHandler());
 
         Button newConnectionBtn = new Button();
         newConnectionBtn.setText("New Connection");
@@ -102,6 +103,25 @@ public class Program extends Application {
         primaryStage.show();
     }
 
+    class NewPlaceBtnHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            imageView.setOnMouseClicked(new MapClickHandler());
+            imageView.setCursor(Cursor.CROSSHAIR);
+        }
+    }
 
+    class MapClickHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            double x = mouseEvent.getX();
+            double y = mouseEvent.getY();
+            Alert msgBox = new Alert(Alert.AlertType.INFORMATION, "Destination info osv");
+            msgBox.showAndWait();
+            System.out.println("New place at: (X: " + x + " Y: " + y + ")");
+
+            imageView.setCursor(Cursor.DEFAULT);
+        }
+    }
 
 }
