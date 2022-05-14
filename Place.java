@@ -1,8 +1,11 @@
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class Place extends Canvas {
+    private boolean marked = false;
 
     public Place(double x, double y){
         super(x,y);
@@ -10,6 +13,18 @@ public class Place extends Canvas {
         gc.setFill(Color.BLUE);
         gc.fillOval(getLayoutX(), getLayoutY(), 20, 20);
         relocate((x - 10), (y - 10));
+        setOnMouseClicked(new ClickHandler());
+    }
+
+    class ClickHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event){
+            if(marked){
+                //setFill(Color.RED);
+            }
+            System.out.println("Klickad!");
+
+        }
 
     }
 
