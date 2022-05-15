@@ -17,7 +17,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+
 
 import java.util.Optional;
 
@@ -29,7 +34,7 @@ public class Program extends Application {
     Pane bottom = new Pane();
     Image image = new Image("file:europa.gif");
     ImageView imageView = new ImageView(image);
-    private Button newPlaceBtn;
+    private Button btnNewPlace;
 
     @Override
     public void start(Stage primaryStage) {
@@ -37,23 +42,23 @@ public class Program extends Application {
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
 
-        Button findPathBtn = new Button();
-        findPathBtn.setText("Find Path");
+        Button btnFindPath = new Button();
+        btnFindPath.setText("Find Path");
 
-        Button showConnectionBtn = new Button();
-        showConnectionBtn.setText("Show Connection");
+        Button btnShowConnection = new Button();
+        btnShowConnection.setText("Show Connection");
 
-        newPlaceBtn = new Button();
-        newPlaceBtn.setText("New Place");
-        newPlaceBtn.setOnAction(new NewPlaceBtnHandler());
+        btnNewPlace = new Button();
+        btnNewPlace.setText("New Place");
+        btnNewPlace.setOnAction(new NewPlaceBtnHandler());
 
-        Button newConnectionBtn = new Button();
-        newConnectionBtn.setText("New Connection");
+        Button btnNewConnection = new Button();
+        btnNewConnection.setText("New Connection");
 
-        Button changeConnectionBtn = new Button();
-        changeConnectionBtn.setText("Change Connection");
+        Button btnChangeConnection = new Button();
+        btnChangeConnection.setText("Change Connection");
 
-        findPathBtn.setOnAction(new EventHandler<ActionEvent>() {
+        btnFindPath.setOnAction(new EventHandler<ActionEvent>() {
 
             //Detta kan göras om till en inre klass
             @Override
@@ -63,20 +68,20 @@ public class Program extends Application {
             }
         });
 
-        //Skapar en BorderPane och lägger till rutan där "fileMenu" ska ligga
+        //Skapar en BorderPane och lägger till rutan där "menuFile" ska ligga
         root = new BorderPane();
         VBox vBox = new VBox();
         root.setTop(vBox);
 
         //Skapar "File" högst upp i programmet
-        MenuBar menuBar = new MenuBar();
-        vBox.getChildren().add(menuBar);
-        Menu fileMenu = new Menu("File");
-        menuBar.getMenus().add(fileMenu);
+        MenuBar menu = new MenuBar();
+        vBox.getChildren().add(menu);
+        Menu menuFile = new Menu("File");
+        menu.getMenus().add(menuFile);
 
         //Lägger till val i FileMenu (fliken New Map)
         MenuItem newMapItem = new MenuItem("New Map");
-        fileMenu.getItems().add(newMapItem);
+        menuFile.getItems().add(newMapItem);
         newMapItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 bottom.getChildren().add(imageView);
@@ -85,17 +90,17 @@ public class Program extends Application {
         });
 
 
-        MenuItem openItem = new MenuItem("Open");
-        fileMenu.getItems().add(openItem);
+        MenuItem menuOpenFile = new MenuItem("Open");
+        menuFile.getItems().add(menuOpenFile);
 
-        MenuItem saveItem = new MenuItem("Save");
-        fileMenu.getItems().add(saveItem);
+        MenuItem menuSaveItem = new MenuItem("Save");
+        menuFile.getItems().add(menuSaveItem);
 
-        MenuItem saveImageItem = new MenuItem("Save Image");
-        fileMenu.getItems().add(saveImageItem);
+        MenuItem menuSaveImage = new MenuItem("Save Image");
+        menuFile.getItems().add(menuSaveImage);
 
-        MenuItem exitItem = new MenuItem("Exit");
-        fileMenu.getItems().add(exitItem);
+        MenuItem menuExit = new MenuItem("Exit");
+        menuFile.getItems().add(menuExit);
 
         //Lägger till knappen, ändrar storlek på Scenen och visar den
         FlowPane controls = new FlowPane();
@@ -105,7 +110,7 @@ public class Program extends Application {
         controls.setPadding(new Insets(5));
         controls.setHgap(10);
         controls.setPrefWrapLength(600); //Fixar så alla knappar är på samma rad
-        controls.getChildren().addAll(findPathBtn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
+        controls.getChildren().addAll(btnFindPath, btnShowConnection, btnNewPlace, btnNewConnection, btnChangeConnection);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -117,7 +122,7 @@ public class Program extends Application {
         public void handle(ActionEvent actionEvent) {
             imageView.setOnMouseClicked(new MapClickHandler());
             imageView.setCursor(Cursor.CROSSHAIR);
-            newPlaceBtn.setDisable(true);
+            btnNewPlace.setDisable(true);
         }
     }
 
@@ -135,15 +140,44 @@ public class Program extends Application {
             Optional<String> result = inputDialog.showAndWait();
             name = inputDialog.getEditor().getText();
 
+
             if(name != null && result.isPresent()){
                 listGraph.add(name);
                 bottom.getChildren().add(new Place(x,y));
             }
 
             System.out.println(listGraph.getNodes().toString());
-            imageView.setOnMouseClicked(null);
+            System.out.println(name);
             imageView.setCursor(Cursor.DEFAULT);
-            newPlaceBtn.setDisable(false);
+            btnNewPlace.setDisable(false);
+
+        }
+    }
+
+    //Ska rita ut linjen mellan två markerade noder
+    class EstablishConnection implements EventHandler<ActionEvent>{
+        @Override
+        public void handle (ActionEvent event){
+            imageView.setOnMouseClicked(new NodeConnectionHandler());
+        }
+    }
+
+    //Klass för att dra linjer mellan noder, funkar ej.
+    class NodeConnectionHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent event) {
+            Place node = new Place(20, 20);
+            Path connectionPath = new Path();
+
+            MoveTo start = new MoveTo();
+            start.setX(node.getLayoutX());
+            start.setY(node.getLayoutY());
+
+            LineTo end = new LineTo();
+            end.setX(event.getX());
+            end.setY(event.getY());
+
+            connectionPath.getElements().addAll(start, end);
         }
     }
 

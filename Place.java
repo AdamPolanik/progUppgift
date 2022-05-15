@@ -5,7 +5,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class Place extends Canvas {
-    private boolean marked = false;
 
     public Place(double x, double y){
         super(x,y);
@@ -13,19 +12,20 @@ public class Place extends Canvas {
         gc.setFill(Color.BLUE);
         gc.fillOval(getLayoutX(), getLayoutY(), 20, 20);
         relocate((x - 10), (y - 10));
-        setOnMouseClicked(new ClickHandler());
+        //nedan tillagt men funkar inte, fattar inte hur det ska gå att fixa
+        //setOnMouseClicked(new ClickHandler());
     }
 
-    class ClickHandler implements EventHandler<MouseEvent> {
+    //Lyssnare men tror det är pga graphicscontext som det strular
+    /*class ClickHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event){
-            if(marked){
-                //setFill(Color.RED);
-            }
-            System.out.println("Klickad!");
+            System.out.println("Klickad");
 
         }
 
     }
+
+     */
 
 }
