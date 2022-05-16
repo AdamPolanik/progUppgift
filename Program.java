@@ -18,8 +18,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
 
 import java.util.Optional;
 
@@ -137,6 +137,27 @@ public class Program extends Application {
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
             }
+            else{
+                try {
+                    ConnectionDialog dialog = new ConnectionDialog();
+                    Optional<ButtonType> result = dialog.showAndWait();
+                    if (result.isPresent() && result.get() != ButtonType.OK)
+                        return;
+                    String name = dialog.getName();
+                    int time = dialog.getTime();
+
+                    listGraph.connect(from.getName(), to.getName(), name, time);
+                    System.out.println("Connected!");
+
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
+                    alert.showAndWait();
+                }
+
+            }
+
+
+
         }
     }
 
