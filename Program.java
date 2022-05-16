@@ -32,6 +32,9 @@ public class Program extends Application {
     Image image = new Image("file:europa.gif");
     ImageView imageView = new ImageView(image);
     private Button newPlaceBtn;
+    private Button newConnectionBtn;
+    private Place from = null;
+    private Place to = null;
 
     @Override
     public void start(Stage primaryStage) {
@@ -49,8 +52,9 @@ public class Program extends Application {
         newPlaceBtn.setText("New Place");
         newPlaceBtn.setOnAction(new NewPlaceBtnHandler());
 
-        Button newConnectionBtn = new Button();
+        newConnectionBtn = new Button();
         newConnectionBtn.setText("New Connection");
+        newConnectionBtn.setOnAction(new NewConnectionHandler());
 
         Button changeConnectionBtn = new Button();
         changeConnectionBtn.setText("Change Connection");
@@ -85,7 +89,6 @@ public class Program extends Application {
                 primaryStage.sizeToScene(); //Ändrar storleken på fönstret så man ser kartan
             }
         });
-
 
         MenuItem openItem = new MenuItem("Open");
         fileMenu.getItems().add(openItem);
@@ -123,6 +126,19 @@ public class Program extends Application {
         }
     }
 
+    class NewConnectionHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent){
+            if(from == null || to == null){
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Two places must be selected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            }
+        }
+    }
+
     //Klass för att lägga till noder på kartan
     class MapClickHandler implements EventHandler<MouseEvent>{
         @Override
@@ -139,13 +155,42 @@ public class Program extends Application {
 
             if(name != null && result.isPresent()){
                 listGraph.add(name);
-                bottom.getChildren().add(new Place(x,y));
+                Place place = new Place(x,y, name);
+                bottom.getChildren().add(place);
+                place.setOnMouseClicked(new PlaceClickHandler());
             }
 
             System.out.println(listGraph.getNodes().toString());
             imageView.setOnMouseClicked(null);
             imageView.setCursor(Cursor.DEFAULT);
             newPlaceBtn.setDisable(false);
+        }
+    }
+
+    class PlaceClickHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent mouseEvent){
+            Place p = (Place)mouseEvent.getSource();
+            if(from == null){
+                from = p;
+                p.setFill(Color.RED);
+                System.out.println("Selected: " + p.getName());
+            }
+            else if(to == null && p != from){
+                to = p;
+                p.setFill(Color.RED);
+                System.out.println("Selected: " + p.getName());
+            }
+            else if(p == from){
+                p.setFill(Color.BLUE);
+                System.out.println("Deselected: " + p.getName());
+                from = null;
+            }
+            else if(p == to){
+                p.setFill(Color.BLUE);
+                System.out.println("Deselected: " + p.getName());
+                to = null;
+            }
         }
     }
 

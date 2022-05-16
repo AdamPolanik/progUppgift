@@ -1,30 +1,19 @@
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Place extends Circle {
 
-    private boolean marked = false;
-
-    public Place(double x, double y){
+    private String name;
+    public Place(double x, double y, String name){
         super(x,y, 10, Color.BLUE);
-        setOnMouseClicked(new ClickHandler());
+        this.name = name;
     }
 
-    class ClickHandler implements EventHandler<MouseEvent>{
-        @Override
-        public void handle(MouseEvent event){
-            if (!marked){
-                rePaintNode();
-                marked = true;
-            } else {
-                paintNode();
-                marked =! marked;
-            }
-        }
+    public String getName(){
+        return name;
     }
-    
+
     public void rePaintNode (){
         setFill(Color.RED);
     }
