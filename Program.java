@@ -129,16 +129,24 @@ public class Program extends Application {
         }
     }
 
-    class NewConnectionHandler implements EventHandler<ActionEvent> {
+    class NewConnectionHandler implements EventHandler<ActionEvent>{
         @Override
-        public void handle(ActionEvent actionEvent) {
-            if (from == null || to == null) {
+        public void handle(ActionEvent actionEvent){
+            if(from == null || to == null){
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Two places must be selected!");
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
-            } else {
+            }
+            else if(listGraph.getEdgeBetween(to.getName(), from.getName()) != null){
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Places already connected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            }
+            else{
                 try {
                     ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
                     Optional<ButtonType> result = dialog.showAndWait();
@@ -154,7 +162,6 @@ public class Program extends Application {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
                     alert.showAndWait();
                 }
-
             }
         }
     }
