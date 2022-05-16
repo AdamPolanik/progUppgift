@@ -33,6 +33,7 @@ public class Program extends Application {
     ImageView imageView = new ImageView(image);
     private Button newPlaceBtn;
     private Button newConnectionBtn;
+    private Button showConnectionBtn;
     private Place from = null;
     private Place to = null;
 
@@ -45,7 +46,7 @@ public class Program extends Application {
         Button findPathBtn = new Button();
         findPathBtn.setText("Find Path");
 
-        Button showConnectionBtn = new Button();
+        showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
 
         newPlaceBtn = new Button();
@@ -214,5 +215,30 @@ public class Program extends Application {
             }
         }
     }
+
+    //Dialogruta för Show Connection knappen
+    class ShowConnectionHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent event) {
+            TextInputDialog inputDialog = new TextInputDialog();
+            inputDialog.setTitle("Connection");
+            inputDialog.setHeaderText("Connection from " + from + "to" + to);
+            inputDialog.setContentText("Name: " + "\nTime: ");
+        }
+    }
+
+
+    class ShowConnectionBtn implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            imageView.setOnMouseClicked(new ShowConnectionHandler());
+            imageView.setCursor(Cursor.DEFAULT);
+            showConnectionBtn.setDisable(true);
+        }
+    }
+
+
+
+
 
 }
