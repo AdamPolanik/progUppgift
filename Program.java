@@ -137,6 +137,13 @@ public class Program extends Application {
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
             }
+            else if(listGraph.getEdgeBetween(to.getName(), from.getName()) != null){
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Places already connected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            }
             else{
                 try {
                     ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
