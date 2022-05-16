@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
+import javax.swing.*;
 import java.util.Optional;
 
 
@@ -48,6 +49,7 @@ public class Program extends Application {
 
         showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
+        showConnectionBtn.setOnAction(new ShowConnectionHandler());
 
         newPlaceBtn = new Button();
         newPlaceBtn.setText("New Place");
@@ -118,7 +120,7 @@ public class Program extends Application {
     }
 
     //Klass för newPlace knappen
-    class NewPlaceBtnHandler implements EventHandler<ActionEvent>{
+    class NewPlaceBtnHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent actionEvent) {
             imageView.setOnMouseClicked(new MapClickHandler());
@@ -127,17 +129,16 @@ public class Program extends Application {
         }
     }
 
-    class NewConnectionHandler implements EventHandler<ActionEvent>{
+    class NewConnectionHandler implements EventHandler<ActionEvent> {
         @Override
-        public void handle(ActionEvent actionEvent){
-            if(from == null || to == null){
+        public void handle(ActionEvent actionEvent) {
+            if (from == null || to == null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Two places must be selected!");
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
-            }
-            else{
+            } else {
                 try {
                     ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
                     Optional<ButtonType> result = dialog.showAndWait();
@@ -155,14 +156,11 @@ public class Program extends Application {
                 }
 
             }
-
-
-
         }
     }
 
     //Klass för att lägga till noder på kartan
-    class MapClickHandler implements EventHandler<MouseEvent>{
+    class MapClickHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent mouseEvent) {
             String name;
@@ -175,9 +173,9 @@ public class Program extends Application {
             Optional<String> result = inputDialog.showAndWait();
             name = inputDialog.getEditor().getText();
 
-            if(name != null && result.isPresent()){
+            if (name != null && result.isPresent()) {
                 listGraph.add(name);
-                Place place = new Place(x,y, name);
+                Place place = new Place(x, y, name);
                 bottom.getChildren().add(place);
                 place.setOnMouseClicked(new PlaceClickHandler());
             }
@@ -189,26 +187,23 @@ public class Program extends Application {
         }
     }
 
-    class PlaceClickHandler implements EventHandler<MouseEvent>{
+    class PlaceClickHandler implements EventHandler<MouseEvent> {
         @Override
-        public void handle(MouseEvent mouseEvent){
-            Place p = (Place)mouseEvent.getSource();
-            if(from == null){
+        public void handle(MouseEvent mouseEvent) {
+            Place p = (Place) mouseEvent.getSource();
+            if (from == null) {
                 from = p;
                 p.setFill(Color.RED);
                 System.out.println("Selected: " + p.getName());
-            }
-            else if(to == null && p != from){
+            } else if (to == null && p != from) {
                 to = p;
                 p.setFill(Color.RED);
                 System.out.println("Selected: " + p.getName());
-            }
-            else if(p == from){
+            } else if (p == from) {
                 p.setFill(Color.BLUE);
                 System.out.println("Deselected: " + p.getName());
                 from = null;
-            }
-            else if(p == to){
+            } else if (p == to) {
                 p.setFill(Color.BLUE);
                 System.out.println("Deselected: " + p.getName());
                 to = null;
@@ -217,28 +212,40 @@ public class Program extends Application {
     }
 
     //Dialogruta för Show Connection knappen
-    class ShowConnectionHandler implements EventHandler<MouseEvent>{
-        @Override
-        public void handle(MouseEvent event) {
-            TextInputDialog inputDialog = new TextInputDialog();
-            inputDialog.setTitle("Connection");
-            inputDialog.setHeaderText("Connection from " + from + "to" + to);
-            inputDialog.setContentText("Name: " + "\nTime: ");
-        }
-    }
-
-
-    class ShowConnectionBtn implements EventHandler<ActionEvent>{
+    class ShowConnectionHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            imageView.setOnMouseClicked(new ShowConnectionHandler());
-            imageView.setCursor(Cursor.DEFAULT);
-            showConnectionBtn.setDisable(true);
+            if (from == null || to == null) {
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Two places must be selected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            } else {
+                try {
+                    ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
+                    Optional<ButtonType> result = dialog.showAndWait();
+                    if (result.isPresent() && result.get() != ButtonType.OK)
+                        return;
+                    String name = dialog.getName();
+                    int time = dialog.getTime();
+
+                    listGraph.getPath(from, to);
+                    System.out.println(listGraph.getPath(from, to));
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
+                    alert.showAndWait();
+                }
+            }
         }
     }
 
-
-
-
-
+    class ShowConnectionBtn implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+//            imageView.setOnMouseClicked(new ShowConnectionHandler());
+//            imageView.setCursor(Cursor.DEFAULT);
+//            showConnectionBtn.setDisable(true);
+        }
+    }
 }
