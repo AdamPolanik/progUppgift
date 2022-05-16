@@ -10,7 +10,7 @@ public class ConnectionDialog extends Alert{
     private TextField nameField = new TextField();
     private TextField timeField = new TextField();
 
-    public ConnectionDialog() {
+    public ConnectionDialog(String from, String to) {
         super(AlertType.CONFIRMATION);
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -19,7 +19,7 @@ public class ConnectionDialog extends Alert{
         grid.setVgap(10);
         grid.addRow(0, new Label("Name:"), nameField);
         grid.addRow(1, new Label("Time:"), timeField);
-        setHeaderText(null);
+        setHeaderText("Connection from " + from + " to " + to );
         getDialogPane().setContent(grid);
     }
     public String getName() {

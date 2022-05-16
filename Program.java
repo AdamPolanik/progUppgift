@@ -139,7 +139,7 @@ public class Program extends Application {
             }
             else{
                 try {
-                    ConnectionDialog dialog = new ConnectionDialog();
+                    ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
                     Optional<ButtonType> result = dialog.showAndWait();
                     if (result.isPresent() && result.get() != ButtonType.OK)
                         return;
