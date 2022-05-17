@@ -50,6 +50,7 @@ public class Program extends Application {
 
         findPathBtn = new Button();
         findPathBtn.setText("Find Path");
+        findPathBtn.setOnAction(new FindPathHandler());
 
         showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
