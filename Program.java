@@ -33,9 +33,11 @@ public class Program extends Application {
     Pane bottom = new Pane();
     Image image = new Image("file:europa.gif");
     ImageView imageView = new ImageView(image);
+    private Button findPathBtn;
     private Button newPlaceBtn;
     private Button newConnectionBtn;
     private Button showConnectionBtn;
+    private Button changeConnectionBtn;
     private Place from = null;
     private Place to = null;
 
@@ -45,7 +47,7 @@ public class Program extends Application {
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
 
-        Button findPathBtn = new Button();
+        findPathBtn = new Button();
         findPathBtn.setText("Find Path");
 
         showConnectionBtn = new Button();
@@ -60,8 +62,9 @@ public class Program extends Application {
         newConnectionBtn.setText("New Connection");
         newConnectionBtn.setOnAction(new NewConnectionHandler());
 
-        Button changeConnectionBtn = new Button();
+        changeConnectionBtn = new Button();
         changeConnectionBtn.setText("Change Connection");
+        changeConnectionBtn.setOnAction(new ChangeConnectionHandler());
 
         findPathBtn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -254,6 +257,13 @@ public class Program extends Application {
                     alert.showAndWait();
                 }
             }
+        }
+    }
+
+    class ChangeConnectionHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+
         }
     }
 }
