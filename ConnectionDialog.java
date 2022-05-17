@@ -22,10 +22,39 @@ public class ConnectionDialog extends Alert{
         setHeaderText("Connection from " + from + " to " + to );
         getDialogPane().setContent(grid);
     }
+
+    //Konstruktor för showConnection dialogrutan som är icke editerbar
+    public ConnectionDialog(String from, String to, String sNameField, int iTimeField) {
+        super(AlertType.CONFIRMATION);
+        setNameField(sNameField).setEditable(false); setTimeField(iTimeField).setEditable(false);
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(10));
+        grid.setHgap(5);
+        grid.setVgap(10);
+        grid.addRow(0, new Label("Name:"), nameField);
+        grid.addRow(1, new Label("Time:"), timeField);
+        setHeaderText("Connection from " + from + " to " + to );
+        getDialogPane().setContent(grid);
+    }
+
     public String getName() {
         return nameField.getText();
     }
     public int getTime() {
         return Integer.parseInt(timeField.getText());
+    }
+
+    //Sätter namnfältet i dialogrutan vid showConnection
+    public TextField setNameField(String text){
+        this.nameField.setText(text);
+        return nameField;
+    }
+
+    //Sätter tidfältet i dialogrutan vid showConnection
+    public TextField setTimeField(int iTimeField){
+        String sTimeField = String.valueOf(iTimeField);
+        this.timeField.setText(sTimeField);
+        return timeField;
     }
 }

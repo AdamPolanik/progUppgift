@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -222,6 +223,8 @@ public class Program extends Application {
     class ShowConnectionHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
+            String transport = "";
+            int time = 0;
             if (from == null || to == null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Two places must be selected!");
@@ -230,29 +233,21 @@ public class Program extends Application {
                 errorMsg.show();
             } else {
                 try {
-                    ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
-                    Optional<ButtonType> result = dialog.showAndWait();
-                    if (result.isPresent() && result.get() != ButtonType.OK)
-                        return;
-                    String name = dialog.getName();
-                    int time = dialog.getTime();
-
-                    listGraph.getPath(from, to);
-                    System.out.println(listGraph.getPath(from, to));
+                    List<Edge> listEdges = listGraph.getPath(from.getName(), to.getName());
+                    System.out.println(listEdges);
+                    for (Edge e : listEdges){
+                        transport = e.getName();
+                        time = e.getWeight();
+                        System.out.println(e.getName());
+                        System.out.println(e.getWeight());
+                    }
+                    ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName(), transport, time);
+                    dialog.showAndWait();
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
                     alert.showAndWait();
                 }
             }
-        }
-    }
-
-    class ShowConnectionBtn implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-//            imageView.setOnMouseClicked(new ShowConnectionHandler());
-//            imageView.setCursor(Cursor.DEFAULT);
-//            showConnectionBtn.setDisable(true);
         }
     }
 }
