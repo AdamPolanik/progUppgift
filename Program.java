@@ -231,6 +231,12 @@ public class Program extends Application {
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
+            } else if (listGraph.getPath(from.getName(), to.getName()) == null) {
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("No connection established");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
             } else {
                 try {
                     List<Edge> listEdges = listGraph.getPath(from.getName(), to.getName());
