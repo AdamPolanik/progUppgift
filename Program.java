@@ -19,6 +19,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+
+import javax.swing.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +50,6 @@ public class Program extends Application {
 
         findPathBtn = new Button();
         findPathBtn.setText("Find Path");
-        findPathBtn.setOnAction(new FindPathHandler());
 
         showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
@@ -121,24 +124,22 @@ public class Program extends Application {
         }
     }
 
-    class NewConnectionHandler implements EventHandler<ActionEvent>{
+    class NewConnectionHandler implements EventHandler<ActionEvent> {
         @Override
-        public void handle(ActionEvent actionEvent){
-            if(from == null || to == null){
+        public void handle(ActionEvent actionEvent) {
+            if (from == null || to == null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Two places must be selected!");
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
-            }
-            else if(listGraph.getEdgeBetween(to.getName(), from.getName()) != null){
+            } else if (listGraph.getEdgeBetween(to.getName(), from.getName()) != null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Places already connected!");
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
-            }
-            else{
+            } else {
                 try {
                     ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName());
                     Optional<ButtonType> result = dialog.showAndWait();
@@ -259,7 +260,7 @@ public class Program extends Application {
                 errorMsg.setHeaderText("");
                 errorMsg.setTitle("Error!");
                 errorMsg.show();
-            } else if (listGraph.getPath(from.getName(), to.getName()) == null) {
+            } else if (listGraph.getEdgeBetween(to.getName(), from.getName()) == null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("No connection established");
                 errorMsg.setHeaderText("");
@@ -267,14 +268,10 @@ public class Program extends Application {
                 errorMsg.show();
             } else {
                 try {
-                    List<Edge> listEdges = listGraph.getPath(from.getName(), to.getName());
-                    System.out.println(listEdges);
-                    for (Edge e : listEdges){
-                        transport = e.getName();
-                        time = e.getWeight();
-                        System.out.println(e.getName());
-                        System.out.println(e.getWeight());
-                    }
+                    Edge edge = listGraph.getEdgeBetween(to.getName(), from.getName());
+                    System.out.println(edge);
+                    transport = edge.getName();
+                    time = edge.getWeight();
                     ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName(), transport, time);
                     dialog.showAndWait();
                 } catch (NumberFormatException e) {
@@ -285,10 +282,36 @@ public class Program extends Application {
         }
     }
 
-    class ChangeConnectionHandler implements EventHandler<ActionEvent>{
+    class ChangeConnectionHandler implements EventHandler<ActionEvent> {
         @Override
-        public void handle(ActionEvent event){
-
+        public void handle(ActionEvent event) {
+            //String transport = "";
+            //int newTime = 0;
+            if (from == null || to == null) {
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Two places must be selected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            } else if (listGraph.getEdgeBetween(to.getName(), from.getName()) == null) {
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("No connection established");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            } else {
+                try {
+                    String transport = listGraph.getEdgeBetween(from.getName(), to.getName()).getName();
+                    int newTime = listGraph.getEdgeBetween(from.getName(), to.getName()).getWeight();
+                    ConnectionDialog dialog = new ConnectionDialog(from.getName(), to.getName(), transport, newTime);
+                    dialog.setTimeField(newTime).setEditable(true);
+                    dialog.showAndWait();
+                    listGraph.setConnectionWeight(from.getName(), to.getName(), dialog.getTime());
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
+                    alert.showAndWait();
+                }
+            }
         }
     }
 }

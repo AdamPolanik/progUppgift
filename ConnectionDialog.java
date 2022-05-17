@@ -37,6 +37,20 @@ public class ConnectionDialog extends Alert{
         setHeaderText("Connection from " + from + " to " + to );
         getDialogPane().setContent(grid);
     }
+    //Konstruktor för change connection
+    public ConnectionDialog(String from, String to, String sNameField, int iTimeField, int newTime) {
+        super(AlertType.CONFIRMATION);
+        setNameField(sNameField).setEditable(false); setTimeField(newTime).setEditable(true);
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(10));
+        grid.setHgap(5);
+        grid.setVgap(10);
+        grid.addRow(0, new Label("Name:"), nameField);
+        grid.addRow(1, new Label("Time:"), timeField);
+        setHeaderText("Connection from " + from + " to " + to );
+        getDialogPane().setContent(grid);
+    }
 
     public String getName() {
         return nameField.getText();

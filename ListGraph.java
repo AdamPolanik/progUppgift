@@ -147,7 +147,7 @@ public class ListGraph<T> implements Graph,Serializable{
         return gatherPath(from, to, connections);
     }
 
-    private List<Edge> gatherPath(Object from, Object to, Map<Object, Object> connection) {
+    public List<Edge> gatherPath(Object from, Object to, Map<Object, Object> connection) {
         LinkedList<Edge> path = new LinkedList<>();
         Object current = to;
         while (!current.equals(from)) {
