@@ -50,6 +50,7 @@ public class Program extends Application {
 
         findPathBtn = new Button();
         findPathBtn.setText("Find Path");
+        findPathBtn.setOnAction(new FindPathHandler());
 
         showConnectionBtn = new Button();
         showConnectionBtn.setText("Show Connection");
@@ -66,16 +67,6 @@ public class Program extends Application {
         changeConnectionBtn = new Button();
         changeConnectionBtn.setText("Change Connection");
         changeConnectionBtn.setOnAction(new ChangeConnectionHandler());
-
-        findPathBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            //Detta kan göras om till en inre klass
-            @Override
-            public void handle(ActionEvent event) {
-                //Skriv vad som ska ske när knappen trycks ned här
-                System.out.println("Find path (kod ska utföras)");
-            }
-        });
 
         //Skapar en BorderPane och lägger till rutan där "fileMenu" ska ligga
         root = new BorderPane();
@@ -165,6 +156,43 @@ public class Program extends Application {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
                     alert.showAndWait();
                 }
+            }
+        }
+    }
+
+    class FindPathHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            if(from == null || to == null){
+                Alert errorMsg = new Alert(Alert.AlertType.ERROR);
+                errorMsg.setContentText("Two places must be selected!");
+                errorMsg.setHeaderText("");
+                errorMsg.setTitle("Error!");
+                errorMsg.show();
+            }
+            else if (listGraph.getPath(from.getName(), to.getName()) == null){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Ingen väg finns!");
+                alert.showAndWait();
+            }
+            else{
+                int total = 0;
+                StringBuilder sb = new StringBuilder();
+                for (Object object : listGraph.getPath(from.getName(),to.getName())) {
+                    sb.append(object);
+
+                    //Lägg till säkerhet/felhantering här under...
+                    int lastIndex = sb.toString().lastIndexOf(" ");
+                    String number = sb.toString().substring(lastIndex+1);
+                    total += Integer.parseInt(number);
+
+                    sb.append("\n");
+                }
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Message");
+                alert.setContentText(sb.toString() + "total: " + total);
+                alert.showAndWait();
+
+                System.out.println(sb.toString());
             }
         }
     }
