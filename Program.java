@@ -48,9 +48,11 @@ public class Program extends Application {
     private Place from = null;
     private Place to = null;
     private boolean edited = false;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
 
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
@@ -109,6 +111,7 @@ public class Program extends Application {
 
         MenuItem exitItem = new MenuItem("Exit");
         fileMenu.getItems().add(exitItem);
+        exitItem.setOnAction(new ExitItemHandler());
 
         //Lägger till knappen, ändrar storlek på Scenen och visar den
         FlowPane controls = new FlowPane();
@@ -120,6 +123,7 @@ public class Program extends Application {
         controls.setPrefWrapLength(600); //Fixar så alla knappar är på samma rad
         controls.getChildren().addAll(findPathBtn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
 
+        primaryStage.setOnCloseRequest(new ExitHandler());
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
@@ -389,22 +393,27 @@ public class Program extends Application {
         }
     }
 
+    class ExitItemHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        }
+    }
+
     class ExitHandler implements EventHandler<WindowEvent>{
         @Override
         public void handle(WindowEvent event){
             if(edited){
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setHeaderText("Unsaved Changes, exit anyways?");
+                alert.setHeaderText("Unsaved changes, exit anyways?");
                 alert.setContentText(null);
-
-                Optional<ButtonType> userChoice = alert.showAndWait();
-
-                if (userChoice.isPresent() && userChoice.get() != ButtonType.OK){
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() != ButtonType.OK){
                     event.consume();
-
                 }
             }
         }
     }
+
 
 }
