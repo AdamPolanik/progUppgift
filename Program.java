@@ -22,6 +22,10 @@ import javafx.stage.Stage;
 
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -94,6 +98,7 @@ public class Program extends Application {
 
         MenuItem saveItem = new MenuItem("Save");
         fileMenu.getItems().add(saveItem);
+        saveItem.setOnAction(new SaveHandler());
 
         MenuItem saveImageItem = new MenuItem("Save Image");
         fileMenu.getItems().add(saveImageItem);
@@ -315,4 +320,50 @@ public class Program extends Application {
             }
         }
     }
+
+    class SaveHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            save();
+        }
+    }
+
+    private void save(){
+        try{
+            FileWriter file = new FileWriter("europa.graph");
+            PrintWriter out = new PrintWriter(file);
+            out.println("europa.gif");
+
+            for(Object object : bottom.getChildren()){
+                if(object instanceof Place){
+                    Place place = (Place) object;
+                    out.print(place.getName() + ";" + place.getX() + ";" + place.getY() + ";");
+                }
+            }
+
+            out.print("\n");
+
+            for(Object name : listGraph.getNodes()){
+                for(Object destination : listGraph.getNodes()){
+                    if(listGraph.getEdgeBetween(name,destination) !=null){
+                        Edge connection = listGraph.getEdgeBetween(name,destination);
+                        out.println(name + ";" + connection.getDestination() + ";" + connection.getName()
+                                + ";" + connection.getWeight() + ";");
+                    }
+                }
+            }
+
+            System.out.println("Saved");
+            out.close();
+            file.close();
+
+        } catch (FileNotFoundException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Kan inte öppna filen");
+            alert.showAndWait();
+        } catch (IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 }
