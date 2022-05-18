@@ -22,10 +22,8 @@ import javafx.stage.Stage;
 
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +34,8 @@ public class Program extends Application {
     ListGraph listGraph = new ListGraph();
     BorderPane root;
     Pane bottom = new Pane();
-    Image image = new Image("file:europa.gif");
-    ImageView imageView = new ImageView(image);
+    //Image image = new Image("file:europa.gif");
+    //ImageView imageView = new ImageView(image);
     private Button findPathBtn;
     private Button newPlaceBtn;
     private Button newConnectionBtn;
@@ -88,13 +86,21 @@ public class Program extends Application {
         fileMenu.getItems().add(newMapItem);
         newMapItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                bottom.getChildren().add(imageView);
+                showImage("europa.gif");
+                //bottom.getChildren().add(imageView);
                 primaryStage.sizeToScene(); //Ändrar storleken på fönstret så man ser kartan
             }
         });
 
         MenuItem openItem = new MenuItem("Open");
         fileMenu.getItems().add(openItem);
+        //openItem.setOnAction(new OpenHandler());
+        openItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                load();
+                primaryStage.sizeToScene();
+            }
+        });
 
         MenuItem saveItem = new MenuItem("Save");
         fileMenu.getItems().add(saveItem);
@@ -118,14 +124,25 @@ public class Program extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
+    }
+
+    private void showImage(String fileName){
+        from = null;
+        to = null;
+        bottom.getChildren().clear();
+        listGraph.clearNodes();
+        Image image = new Image(fileName);
+        ImageView imageView = new ImageView(image);
+        bottom.getChildren().add(imageView);
     }
 
     //Klass för newPlace knappen
     class NewPlaceBtnHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent actionEvent) {
-            imageView.setOnMouseClicked(new MapClickHandler());
-            imageView.setCursor(Cursor.CROSSHAIR);
+            bottom.setOnMouseClicked(new MapClickHandler());
+            bottom.setCursor(Cursor.CROSSHAIR);
             newPlaceBtn.setDisable(true);
         }
     }
@@ -224,8 +241,8 @@ public class Program extends Application {
             }
 
             System.out.println(listGraph.getNodes().toString());
-            imageView.setOnMouseClicked(null);
-            imageView.setCursor(Cursor.DEFAULT);
+            bottom.setOnMouseClicked(null);
+            bottom.setCursor(Cursor.DEFAULT);
             newPlaceBtn.setDisable(false);
         }
     }
@@ -326,6 +343,14 @@ public class Program extends Application {
         }
     }
 
+    /*
+    class OpenHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            load();
+        }
+    }*/
+
     private void save(){
         try{
             FileWriter file = new FileWriter("europa.graph");
@@ -354,6 +379,53 @@ public class Program extends Application {
             System.out.println("Saved");
             out.close();
             file.close();
+
+        } catch (FileNotFoundException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Kan inte öppna filen");
+            alert.showAndWait();
+        } catch (IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    private void load(){
+        try {
+            ArrayList<String> connections = new ArrayList<>();
+            FileReader file = new FileReader("europa.graph");
+            BufferedReader in = new BufferedReader(file);
+
+            String line = in.readLine();
+            showImage(line);
+
+            line = in.readLine();
+
+            String[] splits = line.split(";");
+            for(int i = 0; i < splits.length;){
+                System.out.println(splits[i] + " " + splits[i+1] + " " + splits[i+2]);
+                String name = splits[i];
+                double x = Double.parseDouble(splits[i+1]);
+                double y = Double.parseDouble(splits[i+2]);
+                listGraph.add(name);
+                Place place = new Place(x, y, name);
+                bottom.getChildren().add(place);
+                place.setOnMouseClicked(new PlaceClickHandler());
+                i = i+3;
+            }
+
+            while((line = in.readLine()) != null){
+                connections.add(line);
+            }
+
+            for(int i = 0; i < connections.size();i++){
+                String[] edges = connections.get(i).split(";");
+
+                if(listGraph.getEdgeBetween(edges[1],edges[0]) == null){
+                    listGraph.connect(edges[0],edges[1],edges[2],Integer.parseInt(edges[3]));
+                }
+            }
+            file.close();
+            in.close();
 
         } catch (FileNotFoundException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Kan inte öppna filen");

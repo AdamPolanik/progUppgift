@@ -198,4 +198,8 @@ public class ListGraph<T> implements Graph,Serializable{
         }
         return sb.toString();
     }
+
+    public void clearNodes(){
+        nodes.clear();
+    }
 }
