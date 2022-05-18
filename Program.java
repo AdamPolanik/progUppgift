@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -19,13 +21,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +47,7 @@ public class Program extends Application {
     private Button changeConnectionBtn;
     private Place from = null;
     private Place to = null;
+    private boolean edited = false;
 
     @Override
     public void start(Stage primaryStage) {
@@ -102,6 +105,7 @@ public class Program extends Application {
 
         MenuItem saveImageItem = new MenuItem("Save Image");
         fileMenu.getItems().add(saveImageItem);
+        saveImageItem.setOnAction(new SaveImageHandler());
 
         MenuItem exitItem = new MenuItem("Exit");
         fileMenu.getItems().add(exitItem);
@@ -127,6 +131,7 @@ public class Program extends Application {
             imageView.setOnMouseClicked(new MapClickHandler());
             imageView.setCursor(Cursor.CROSSHAIR);
             newPlaceBtn.setDisable(true);
+            edited = true;
         }
     }
 
@@ -156,6 +161,7 @@ public class Program extends Application {
 
                     listGraph.connect(from.getName(), to.getName(), name, time);
                     System.out.println("Connected!");
+                    edited = true;
 
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
@@ -215,18 +221,21 @@ public class Program extends Application {
             inputDialog.setHeaderText("");
             Optional<String> result = inputDialog.showAndWait();
             name = inputDialog.getEditor().getText();
+            edited = true;
 
             if (name != null && result.isPresent()) {
                 listGraph.add(name);
                 Place place = new Place(x, y, name);
                 bottom.getChildren().add(place);
                 place.setOnMouseClicked(new PlaceClickHandler());
+                edited = true;
             }
 
             System.out.println(listGraph.getNodes().toString());
             imageView.setOnMouseClicked(null);
             imageView.setCursor(Cursor.DEFAULT);
             newPlaceBtn.setDisable(false);
+            edited = true;
         }
     }
 
@@ -311,6 +320,7 @@ public class Program extends Application {
                     dialog.setTimeField(newTime).setEditable(true);
                     dialog.showAndWait();
                     listGraph.setConnectionWeight(from.getName(), to.getName(), dialog.getTime());
+                    edited = true;
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
                     alert.showAndWait();
@@ -354,6 +364,7 @@ public class Program extends Application {
             System.out.println("Saved");
             out.close();
             file.close();
+            edited = false;
 
         } catch (FileNotFoundException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Kan inte öppna filen");
@@ -361,6 +372,38 @@ public class Program extends Application {
         } catch (IOException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
             alert.showAndWait();
+        }
+    }
+
+    class SaveImageHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                WritableImage image = root.snapshot(null, null);
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                ImageIO.write(bufferedImage, "png", new File("capture.png"));
+            }catch(IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
+                alert.showAndWait();
+            }
+        }
+    }
+
+    class ExitHandler implements EventHandler<WindowEvent>{
+        @Override
+        public void handle(WindowEvent event){
+            if(edited){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("Unsaved Changes, exit anyways?");
+                alert.setContentText(null);
+
+                Optional<ButtonType> userChoice = alert.showAndWait();
+
+                if (userChoice.isPresent() && userChoice.get() != ButtonType.OK){
+                    event.consume();
+
+                }
+            }
         }
     }
 
