@@ -1,6 +1,8 @@
 europa.gif
-grönland;164.8;53.6;norge;371.2;206.4;sverige;422.4;287.2;
-grönland;norge;flygplan;200;
+finland;544.0;178.4;sverige;440.0;252.79999999999998;norge;366.4;204.79999999999998;island;167.2;64.80000000000001;
+island;norge;båt;400;
 sverige;norge;bil;300;
-norge;grönland;flygplan;200;
+sverige;finland;flygplan;100;
+norge;island;båt;400;
 norge;sverige;bil;300;
+finland;sverige;flygplan;100;
