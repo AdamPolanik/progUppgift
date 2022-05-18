@@ -258,8 +258,6 @@ public class Program extends Application {
     class ChangeConnectionHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
-            //String transport = "";
-            //int newTime = 0;
             if (from == null || to == null) {
                 Alert errorMsg = new Alert(Alert.AlertType.ERROR);
                 errorMsg.setContentText("Two places must be selected!");
