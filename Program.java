@@ -18,6 +18,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -172,6 +176,11 @@ public class Program extends Application {
                     int time = dialog.getTime();
 
                     listGraph.connect(from.getName(), to.getName(), name, time);
+                    Line line = new Line(from.getX(),from.getY(),to.getX(),to.getY());
+                    line.setStrokeWidth(3);
+                    line.setDisable(true);
+                    bottom.getChildren().add(line);
+
                     System.out.println("Connected!");
 
                 } catch (NumberFormatException e) {
@@ -236,7 +245,13 @@ public class Program extends Application {
             if (name != null && result.isPresent()) {
                 listGraph.add(name);
                 Place place = new Place(x, y, name);
-                bottom.getChildren().add(place);
+
+                Text text = new Text(name);
+                text.setX(x);
+                text.setY(y+30);
+                text.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+                bottom.getChildren().addAll(place,text);
                 place.setOnMouseClicked(new PlaceClickHandler());
             }
 
@@ -392,6 +407,7 @@ public class Program extends Application {
     private void load(){
         try {
             ArrayList<String> connections = new ArrayList<>();
+            ArrayList<Place> places = new ArrayList<>();
             FileReader file = new FileReader("europa.graph");
             BufferedReader in = new BufferedReader(file);
 
@@ -406,9 +422,17 @@ public class Program extends Application {
                 String name = splits[i];
                 double x = Double.parseDouble(splits[i+1]);
                 double y = Double.parseDouble(splits[i+2]);
+
                 listGraph.add(name);
                 Place place = new Place(x, y, name);
-                bottom.getChildren().add(place);
+                places.add(place);
+
+                Text text = new Text(name);
+                text.setX(x);
+                text.setY(y+30);
+                text.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+                bottom.getChildren().addAll(place,text);
                 place.setOnMouseClicked(new PlaceClickHandler());
                 i = i+3;
             }
@@ -422,6 +446,15 @@ public class Program extends Application {
 
                 if(listGraph.getEdgeBetween(edges[1],edges[0]) == null){
                     listGraph.connect(edges[0],edges[1],edges[2],Integer.parseInt(edges[3]));
+
+                    Place fromPlace = getPlace(places,edges[0]);
+                    Place toPlace = getPlace(places,edges[1]);
+
+                    Line connectionLine = new Line(fromPlace.getX(),fromPlace.getY(),toPlace.getX(),toPlace.getY());
+                    connectionLine.setStrokeWidth(3);
+                    connectionLine.setDisable(true);
+                    bottom.getChildren().add(connectionLine);
+
                 }
             }
             file.close();
@@ -434,6 +467,15 @@ public class Program extends Application {
             Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
             alert.showAndWait();
         }
+    }
+
+    private Place getPlace(ArrayList<Place> places, String name){
+        for(Place place : places){
+            if(place.getName().equals(name)){
+                return place;
+            }
+        }
+        return null;
     }
 
 }
