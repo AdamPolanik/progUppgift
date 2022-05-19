@@ -422,7 +422,7 @@ public class Program extends Application {
         }
     }
 
-    private void load(){
+    private void load() {
         try {
             ArrayList<String> connections = new ArrayList<>();
             ArrayList<Place> places = new ArrayList<>();
@@ -435,11 +435,11 @@ public class Program extends Application {
             line = in.readLine();
 
             String[] splits = line.split(";");
-            for(int i = 0; i < splits.length;){
-                System.out.println(splits[i] + " " + splits[i+1] + " " + splits[i+2]);
+            for (int i = 0; i < splits.length; ) {
+                System.out.println(splits[i] + " " + splits[i + 1] + " " + splits[i + 2]);
                 String name = splits[i];
-                double x = Double.parseDouble(splits[i+1]);
-                double y = Double.parseDouble(splits[i+2]);
+                double x = Double.parseDouble(splits[i + 1]);
+                double y = Double.parseDouble(splits[i + 2]);
 
                 listGraph.add(name);
                 Place place = new Place(x, y, name);
@@ -447,28 +447,28 @@ public class Program extends Application {
 
                 Text text = new Text(name);
                 text.setX(x);
-                text.setY(y+30);
+                text.setY(y + 30);
                 text.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
-                bottom.getChildren().addAll(place,text);
+                bottom.getChildren().addAll(place, text);
                 place.setOnMouseClicked(new PlaceClickHandler());
-                i = i+3;
+                i = i + 3;
             }
 
-            while((line = in.readLine()) != null){
+            while ((line = in.readLine()) != null) {
                 connections.add(line);
             }
 
-            for(int i = 0; i < connections.size();i++){
+            for (int i = 0; i < connections.size(); i++) {
                 String[] edges = connections.get(i).split(";");
 
-                if(listGraph.getEdgeBetween(edges[1],edges[0]) == null){
-                    listGraph.connect(edges[0],edges[1],edges[2],Integer.parseInt(edges[3]));
+                if (listGraph.getEdgeBetween(edges[1], edges[0]) == null) {
+                    listGraph.connect(edges[0], edges[1], edges[2], Integer.parseInt(edges[3]));
 
-                    Place fromPlace = getPlace(places,edges[0]);
-                    Place toPlace = getPlace(places,edges[1]);
+                    Place fromPlace = getPlace(places, edges[0]);
+                    Place toPlace = getPlace(places, edges[1]);
 
-                    Line connectionLine = new Line(fromPlace.getX(),fromPlace.getY(),toPlace.getX(),toPlace.getY());
+                    Line connectionLine = new Line(fromPlace.getX(), fromPlace.getY(), toPlace.getX(), toPlace.getY());
                     connectionLine.setStrokeWidth(3);
                     connectionLine.setDisable(true);
                     bottom.getChildren().add(connectionLine);
@@ -484,6 +484,9 @@ public class Program extends Application {
         } catch (IOException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
             alert.showAndWait();
+        }
+    }
+
     class SaveImageHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event) {
