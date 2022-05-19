@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -23,9 +25,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,9 +52,12 @@ public class Program extends Application {
     private Button changeConnectionBtn;
     private Place from = null;
     private Place to = null;
+    private boolean edited = false;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
 
         //Skapar fönstret och knappen
         primaryStage.setTitle("PathFinder");
@@ -112,9 +120,11 @@ public class Program extends Application {
 
         MenuItem saveImageItem = new MenuItem("Save Image");
         fileMenu.getItems().add(saveImageItem);
+        saveImageItem.setOnAction(new SaveImageHandler());
 
         MenuItem exitItem = new MenuItem("Exit");
         fileMenu.getItems().add(exitItem);
+        exitItem.setOnAction(new ExitItemHandler());
 
         //Lägger till knappen, ändrar storlek på Scenen och visar den
         FlowPane controls = new FlowPane();
@@ -126,6 +136,7 @@ public class Program extends Application {
         controls.setPrefWrapLength(600); //Fixar så alla knappar är på samma rad
         controls.getChildren().addAll(findPathBtn, showConnectionBtn, newPlaceBtn, newConnectionBtn, changeConnectionBtn);
 
+        primaryStage.setOnCloseRequest(new ExitHandler());
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
@@ -148,6 +159,7 @@ public class Program extends Application {
             bottom.setOnMouseClicked(new MapClickHandler());
             bottom.setCursor(Cursor.CROSSHAIR);
             newPlaceBtn.setDisable(true);
+            edited = true;
         }
     }
 
@@ -182,6 +194,7 @@ public class Program extends Application {
                     bottom.getChildren().add(line);
 
                     System.out.println("Connected!");
+                    edited = true;
 
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
@@ -241,6 +254,7 @@ public class Program extends Application {
             inputDialog.setHeaderText("");
             Optional<String> result = inputDialog.showAndWait();
             name = inputDialog.getEditor().getText();
+            edited = true;
 
             if (name != null && result.isPresent()) {
                 listGraph.add(name);
@@ -253,12 +267,14 @@ public class Program extends Application {
 
                 bottom.getChildren().addAll(place,text);
                 place.setOnMouseClicked(new PlaceClickHandler());
+                edited = true;
             }
 
             System.out.println(listGraph.getNodes().toString());
             bottom.setOnMouseClicked(null);
             bottom.setCursor(Cursor.DEFAULT);
             newPlaceBtn.setDisable(false);
+            edited = true;
         }
     }
 
@@ -343,6 +359,7 @@ public class Program extends Application {
                     dialog.setTimeField(newTime).setEditable(true);
                     dialog.showAndWait();
                     listGraph.setConnectionWeight(from.getName(), to.getName(), dialog.getTime());
+                    edited = true;
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
                     alert.showAndWait();
@@ -394,6 +411,7 @@ public class Program extends Application {
             System.out.println("Saved");
             out.close();
             file.close();
+            edited = false;
 
         } catch (FileNotFoundException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Kan inte öppna filen");
@@ -466,8 +484,42 @@ public class Program extends Application {
         } catch (IOException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "IO_fel: " + exception.getMessage());
             alert.showAndWait();
+    class SaveImageHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                WritableImage image = root.snapshot(null, null);
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                ImageIO.write(bufferedImage, "png", new File("capture.png"));
+            }catch(IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Fel!");
+                alert.showAndWait();
+            }
         }
     }
+
+    class ExitItemHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        }
+    }
+
+    class ExitHandler implements EventHandler<WindowEvent>{
+        @Override
+        public void handle(WindowEvent event){
+            if(edited){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("Unsaved changes, exit anyways?");
+                alert.setContentText(null);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() != ButtonType.OK){
+                    event.consume();
+                }
+            }
+        }
+    }
+
 
     private Place getPlace(ArrayList<Place> places, String name){
         for(Place place : places){
