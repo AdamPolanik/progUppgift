@@ -284,18 +284,22 @@ public class Program extends Application {
             Place p = (Place) mouseEvent.getSource();
             if (from == null) {
                 from = p;
-                p.setFill(Color.RED);
+                p.rePaintNode();
+                //p.setFill(Color.RED);
                 System.out.println("Selected: " + p.getName());
             } else if (to == null && p != from) {
                 to = p;
-                p.setFill(Color.RED);
+                p.rePaintNode();
+                //p.setFill(Color.RED);
                 System.out.println("Selected: " + p.getName());
             } else if (p == from) {
-                p.setFill(Color.BLUE);
+                p.paintNode();
+                //p.setFill(Color.BLUE);
                 System.out.println("Deselected: " + p.getName());
                 from = null;
             } else if (p == to) {
-                p.setFill(Color.BLUE);
+                p.paintNode();
+                //p.setFill(Color.BLUE);
                 System.out.println("Deselected: " + p.getName());
                 to = null;
             }
