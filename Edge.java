@@ -1,3 +1,9 @@
+/**
+ * PROG2 VT2022, Inlämningsuppgift, del 1
+ * Grupp 089
+ * Artin Mohseni armo9784
+ * Adam Polanik adan7490
+ */
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,9 +23,11 @@ public class Edge<T> implements Serializable{
         this.weight = weight;
     }
 
-    public String getDestination() {
+    public String getDestinationString() {
         return destination.toString();
     }
+
+    public Object getDestination() {return destination ;}
 
     public String getName() {
         return name;
@@ -52,8 +60,8 @@ public class Edge<T> implements Serializable{
     @Override
     public String toString() {
         return
-                "till " + destination +
-                " med " + name +
-                " tar " + weight;
+                "to " + destination +
+                        " by " + name +
+                        " takes " + weight;
     }
 }

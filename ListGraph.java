@@ -26,8 +26,8 @@ public class ListGraph<T> implements Graph,Serializable{
         }
         Collection<Edge> edgesToRemove = getEdgesFrom(node);
         for (Edge edge : edgesToRemove){
-            Object destination = edge.getDestination();
-            Edge between = getEdgeBetween(edge.getDestination(), node);
+            Object destination = edge.getDestinationString();
+            Edge between = getEdgeBetween(edge.getDestinationString(), node);
             if (between != null){
                 nodes.get(node).remove(edge);
                 nodes.get(destination).remove(between);
@@ -106,12 +106,10 @@ public class ListGraph<T> implements Graph,Serializable{
 
     @Override
     public boolean pathExists(Object a, Object b) {
-        if(!nodes.containsKey(a) || !nodes.containsKey(b)){
+        if(!nodes.containsKey(a) || !nodes.containsKey(b) || getPath(b,a) == null){
             return false;
         }
-        Set<Object> visited = new HashSet<>();
-        depthFirstVisitAll(a, visited);
-        return visited.contains(b);
+        return true;
     }
 
     @Override
@@ -133,7 +131,7 @@ public class ListGraph<T> implements Graph,Serializable{
         while (!queue.isEmpty()) {
             Object node = queue.pollFirst();
             for (Edge edge : nodes.get(node)) {
-                Object destination = edge.getDestination();
+                Object destination = edge.getDestinationString();
                 if (!connections.containsKey(destination)) {
                     connections.put(destination, node);
                     queue.add(destination);
@@ -165,7 +163,7 @@ public class ListGraph<T> implements Graph,Serializable{
             throw new NoSuchElementException();
         }
         for (Edge edge : nodes.get(next)) {
-            if (edge.getDestination().equals(current)) {
+            if (edge.getDestinationString().equals(current.toString())) {
                 return edge;
             }
         }
@@ -184,8 +182,8 @@ public class ListGraph<T> implements Graph,Serializable{
     private void depthFirstVisitAll(Object current, Set<Object> visited) {
         visited.add(current);
         for (Edge edge : nodes.get(current)) {
-            if (!visited.contains(edge.getDestination())) {
-                depthFirstVisitAll(edge.getDestination(), visited);
+            if (!visited.contains(edge.getDestinationString())) {
+                depthFirstVisitAll(edge.getDestinationString(), visited);
             }
         }
     }

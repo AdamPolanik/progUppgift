@@ -1,3 +1,9 @@
+/**
+ * PROG2 VT2022, Inlämningsuppgift, del 2
+ * Grupp 089
+ * Artin Mohseni armo9784
+ * Adam Polanik adan7490
+ */
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -12,44 +18,21 @@ public class ConnectionDialog extends Alert{
 
     public ConnectionDialog(String from, String to) {
         super(AlertType.CONFIRMATION);
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setPadding(new Insets(10));
-        grid.setHgap(5);
-        grid.setVgap(10);
-        grid.addRow(0, new Label("Name:"), nameField);
-        grid.addRow(1, new Label("Time:"), timeField);
-        setHeaderText("Connection from " + from + " to " + to );
-        getDialogPane().setContent(grid);
+        createDialog(from, to);
     }
 
     //Konstruktor för showConnection dialogrutan som är icke editerbar
-    public ConnectionDialog(String from, String to, String sNameField, int iTimeField) {
+    public ConnectionDialog(String from, String to, String stringNameField, int intTimeField) {
         super(AlertType.CONFIRMATION);
-        setNameField(sNameField).setEditable(false); setTimeField(iTimeField).setEditable(false);
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setPadding(new Insets(10));
-        grid.setHgap(5);
-        grid.setVgap(10);
-        grid.addRow(0, new Label("Name:"), nameField);
-        grid.addRow(1, new Label("Time:"), timeField);
-        setHeaderText("Connection from " + from + " to " + to );
-        getDialogPane().setContent(grid);
+        setNameField(stringNameField).setEditable(false);
+        setTimeField(intTimeField).setEditable(false);
+        createDialog(from, to);
     }
     //Konstruktor för change connection
-    public ConnectionDialog(String from, String to, String sNameField, int iTimeField, int newTime) {
+    public ConnectionDialog(String from, String to, String stringNameField, int intTimeField, int newTime) {
         super(AlertType.CONFIRMATION);
-        setNameField(sNameField).setEditable(false); setTimeField(newTime).setEditable(true);
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setPadding(new Insets(10));
-        grid.setHgap(5);
-        grid.setVgap(10);
-        grid.addRow(0, new Label("Name:"), nameField);
-        grid.addRow(1, new Label("Time:"), timeField);
-        setHeaderText("Connection from " + from + " to " + to );
-        getDialogPane().setContent(grid);
+        setNameField(stringNameField).setEditable(false);
+        createDialog(from, to);
     }
 
     public String getName() {
@@ -59,6 +42,18 @@ public class ConnectionDialog extends Alert{
         return Integer.parseInt(timeField.getText());
     }
 
+    private void createDialog(String from, String to){
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(10));
+        grid.setHgap(5);
+        grid.setVgap(10);
+        grid.addRow(0, new Label("Name:"), nameField);
+        grid.addRow(1, new Label("Time:"), timeField);
+        setHeaderText("Connection from " + from + " to " + to );
+        getDialogPane().setContent(grid);
+    }
+
     //Sätter namnfältet i dialogrutan vid showConnection
     public TextField setNameField(String text){
         this.nameField.setText(text);
@@ -66,9 +61,9 @@ public class ConnectionDialog extends Alert{
     }
 
     //Sätter tidfältet i dialogrutan vid showConnection
-    public TextField setTimeField(int iTimeField){
-        String sTimeField = String.valueOf(iTimeField);
-        this.timeField.setText(sTimeField);
+    public TextField setTimeField(int intTimeField){
+        String stringTimeField = String.valueOf(intTimeField);
+        this.timeField.setText(stringTimeField);
         return timeField;
     }
 }
